@@ -1,19 +1,15 @@
 //
 //  NSEnumerator+Additions.m
-//  TesApp
+//  Agent
 //
-//  Created by 鮫島 隆治 on 2012/10/27.
-//  Copyright (c) 2012年 鮫島 隆治. All rights reserved.
 //
 
 #import "NSEnumerator+Query.h"
 
-/**************************************************************************/
-/// @name
+
 @implementation CustomEnumerator
 
-/**************************************************************************/
-/// @name
+
 - (id)initWithFunction:(NSEnumerator *)src nextObjectBlock:(id(^)(NSEnumerator *))nextObject
 {
     self = [super init];
@@ -24,8 +20,7 @@
     return self;
 }
 
-/**************************************************************************/
-/// @name
+
 - (id)nextObject
 {
     return _nextObject(_src);
@@ -35,12 +30,10 @@
 
 
 
-/**************************************************************************/
-/// @name
+
 @implementation NSEnumerator (Query)
 
-/**************************************************************************/
-/// @name
+
 +(NSEnumerator *)fromNSData:(NSData*)data{
     
     __block NSData * _data = data;
@@ -60,8 +53,7 @@
         }];
 }
 
-/**************************************************************************/
-/// @name
+
 - (NSEnumerator *) ofClass: (Class) class
 {
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
@@ -74,8 +66,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) select: (id(^)(id)) selector
 {
     id (^_selector)(id) = [selector copy];
@@ -84,8 +75,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) selectWithIndex: (id(^)(id,int)) selector
 {
     __block int counter = 0;
@@ -100,8 +90,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) where: (BOOL(^)(id)) predicate
 {
     BOOL (^_predicate)(id) = [predicate copy];
@@ -110,8 +99,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) whereWithIndex: (BOOL(^)(id,int)) predicate
 {
     __block int counter = 0;
@@ -127,8 +115,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) skip: (int)count
 {
     __block int counter = 0;
@@ -140,8 +127,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) skipWhile: (BOOL(^)(id item)) predicate
 {
     return [self skipWhileWithIndex:^BOOL(id item, int index) {
@@ -149,8 +135,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) skipWhileWithIndex: (BOOL(^)(id,int)) predicate
 {
     __block int counter = 0;
@@ -167,8 +152,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) take: (int)count
 {
     __block int counter = 0;
@@ -182,8 +166,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) takeWhile: (BOOL(^)(id item)) predicate
 {
     return [self takeWhileWithIndex:^BOOL(id item, int index) {
@@ -191,8 +174,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id,int)) predicate
 {
     __block int counter = 0;
@@ -211,8 +193,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSEnumerator *)orderByDescription:(NSSortDescriptor *)firstObj, ... NS_REQUIRES_NIL_TERMINATION
 {
     va_list list;
@@ -229,8 +210,7 @@
     return [result objectEnumerator];
 }
 
-/**************************************************************************/
-/// @name
+
 - (NSEnumerator *) selectMany: (id(^)(id)) selector
 {
     id (^_selector)(id) = [selector copy];
@@ -249,8 +229,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 - (NSEnumerator *) concat:(NSEnumerator *)dst
 {
     __weak NSEnumerator *_dst = dst;
@@ -276,8 +255,7 @@
     }];
 }
 
-/**************************************************************************/
-/// @name
+
 - (NSMutableArray*) toArray
 {
     NSMutableArray *result = [[NSMutableArray alloc]init];
@@ -287,8 +265,7 @@
     return result;
 }
 
-/**************************************************************************/
-/// @name
+
 -(NSData *) toNSData
 {
     NSArray * array = [self allObjects];
@@ -301,8 +278,7 @@
 }
 
 
-/**************************************************************************/
-/// @name
+
 -(id) single
 {
     id item = [self nextObject];
@@ -316,8 +292,7 @@
     return nil;
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) singleOrNil
 {
     id item = [self nextObject];
@@ -331,8 +306,7 @@
     return nil;
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) elementAt:(int)index
 {
     id item = [[self toArray]objectAtIndex:index];
@@ -346,15 +320,13 @@
     return nil;
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) elementOrNilAt:(int)index
 {
     return [[self toArray]objectAtIndex:index];
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) first
 {
     id item = [self nextObject];
@@ -368,15 +340,13 @@
     return nil;
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) firstOrNil
 {
     return [self nextObject];
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) last
 {
     id item = [[self toArray]lastObject];
@@ -390,22 +360,19 @@
     return nil;
 }
 
-/**************************************************************************/
-/// @name
+
 -(id) lastOrNil
 {
     return [[self toArray]lastObject];
 }
 
-/**************************************************************************/
-/// @name
+
 -(int) count
 {
     return [self toArray].count;
 }
 
-/**************************************************************************/
-/// @name
+
 -(BOOL) all: (BOOL(^)(id)) predicate
 {
     id item;
@@ -417,8 +384,7 @@
     return YES;
 }
 
-/**************************************************************************/
-/// @name
+
 -(BOOL) any: (BOOL(^)(id)) predicate
 {
     id item;
@@ -430,8 +396,7 @@
     return NO;
 }
 
-/**************************************************************************/
-/// @name
+
 -(BOOL) contains : (id) item
 {
     id dst;
@@ -443,8 +408,7 @@
     return NO;
 }
 
-/**************************************************************************/
-/// @name
+
 -(BOOL) sequenceEqual: (NSEnumerator *)dst
 {
     id srcItem;
@@ -462,8 +426,7 @@
     return YES;
 }
 
-/**************************************************************************/
-/// @name
+
 - (void) forEach: (void(^)(id)) action
 {
     for (id value in self) {

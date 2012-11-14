@@ -1,294 +1,284 @@
 //
-//  NSEnumerator+Additions.h
-//  TesApp
+//  NSEnumerator+Query.h
+//  Agent
 //
-//  Created by 鮫島 隆治 on 2012/10/27.
-//  Copyright (c) 2012年 鮫島 隆治. All rights reserved.
 //
+
+/*!
+ @header      NSEnumerator+Query.h
+ @abstract    カスタム列挙子
+ */
 
 #import <Foundation/Foundation.h>
 
-/** カスタムの列挙子
- * 
- *
+/*!
+ @abstract    カスタム列挙子クラス
  */
 @interface CustomEnumerator : NSEnumerator
 {
+    /*! データ取得元 */
     __weak NSEnumerator *_src;
-    id (^_nextObject)(NSEnumerator *);
+    /*! 次の要素を取得する処理block */
+    id (^_nextObject)(NSEnumerator * src);
 }
 
+/*!
+ @abstract      CustomEnemeratorを作成する。
+ @discussion    nextObjectの実行ブロックで初期化する。
+ @param         src データ取得元
+ @param         nextObject 次の要素
+ @result        初期化されたCustomEnumerator
+*/
 - (id)initWithFunction:(NSEnumerator *)src nextObjectBlock:(id(^)(NSEnumerator *))nextObject;
+
+/*!
+ @abstract      次の要素を取得する。
+ @result        次の要素
+ */
 - (id)nextObject;
 
 @end
 
-/** リスト処理用カテゴリ
- * リストに対して様々な処理を提供する
- *
+/*!
+ @abstract      リスト処理用カテゴリ
+ @discussion    リストに対して様々な処理を提供する
  */
 @interface NSEnumerator (Query)
 
-/**************************************************************************/
-// 生成系
-/**************************************************************************/
-/** NSDataからcharのNSEnumerator
- *
- * @param  data   生成元のNSData
- * @throws なし
- * @return フィルタ後のリスト
+
+#pragma mark - 生成系
+/*!
+ @abstract      NSDataから列挙子を作成する。
+ @discussion    NSData１バイト毎のchar配列の列挙子で初期化する。
+ @param         data 生成元のNSData
+ @result        作成されたEnumerator
  */
 +(NSEnumerator *)fromNSData:(NSData*)data;
 
-/**************************************************************************/
-// 変換系
-/**************************************************************************/
-/** 指定したクラスの物のみ取得する
- *
- * @param  class   取得対象クラス
- * @throws なし
- * @return フィルタ後のリスト
+#pragma mark - 変換系
+/*!
+ @abstract      指定したクラスの物のみ取得する
+ @param         class 取得対象クラス
+ @result        フィルタ後のリスト
  */
 - (NSEnumerator *) ofClass: (Class) class;
 
-/** リストを変換する
- *
- * @param  selector   変換関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      リストを変換する
+ @param         selector 変換関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) select: (id(^)(id)) selector;
 
-/** リストを変換する
- *
- * @param  selector   変換関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      リストを変換する
+ @discussion    リストを変換する(index付)
+ @param         selector 変換関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) selectWithIndex: (id(^)(id,int)) selector;
 
-/** 条件に一致するもののみ取得する
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      条件に一致するもののみ取得する
+ @param         predicate 判定関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) where: (BOOL(^)(id)) predicate;
 
-/** 条件に一致するもののみ取得する
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      条件に一致するもののみ取得する
+ @discussion    条件に一致するもののみ取得する(index付)
+ @param         predicate 判定関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) whereWithIndex: (BOOL(^)(id,int)) predicate;
 
-/** 指定された数だけ読み飛ばす
- *
- * @param  count   読み飛ばす数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      指定された数だけ読み飛ばす
+ @param         count 読み飛ばす数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) skip: (int) count;
 
-/** 条件に一致する間は読み飛ばす
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      条件に一致する間は読み飛ばす
+ @param         predicate 判定関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) skipWhile: (BOOL(^)(id)) predicate;
 
-/** 条件に一致する間は読み飛ばす
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      条件に一致する間は読み飛ばす
+ @discussion    条件に一致する間は読み飛ばす(index付)
+ @param         predicate 判定関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) skipWhileWithIndex: (BOOL(^)(id,int)) predicate;
 
-/** 指定された数だけ取得する
- *
- * @param  count   取得する数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      指定された数だけ取得する
+ @param         count 取得する数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) take: (int) count;
 
-/** 条件に一致する間は取得する
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      条件に一致する間は取得する
+ @param         predicate 判定関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) takeWhile: (BOOL(^)(id)) predicate;
 
-/** 条件に一致する間は取得する
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      条件に一致する間は取得する
+ @discussion    条件に一致する間は取得する(index付)
+ @param         predicate 判定関数
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id,int)) predicate;
 
-/** ソートする
- *
- * @param  firstObj   ソート条件
- * @throws なし
- * @return ソート後のリスト
+/*!
+ @abstract      ソートする
+ @param         firstObj ソート条件(複数指定可)
+ @result        フィルタ後のリスト
  */
 -(NSEnumerator *) orderByDescription:(NSSortDescriptor *)firstObj, ... NS_REQUIRES_NIL_TERMINATION;
 
-/** リストからなるリストを展開する
- *
- * @param  なし
- * @throws なし
- * @return 展開後のリスト
+/*!
+ @abstract      リストからなるリストを展開する
+ @param         selector 変換関数
+ @result        展開後のリスト
  */
 - (NSEnumerator *) selectMany: (id(^)(id)) selector;
 
-/** リストを連結する
- *
- * @param  なし
- * @throws なし
- * @return 連結後のリスト
+/*!
+ @abstract      リストを連結する
+ @param         dst 結合する列挙子
+ @result        連結後のリスト
  */
 - (NSEnumerator *) concat:(NSEnumerator *)dst;
 
-/** NSMutableArrayに変換する
- *
- * @param  なし
- * @throws なし
- * @return NSMutableArray
+
+/*!
+ @abstract      NSMutableArrayに変換する
+ @result        変換したNSMutableArray
  */
 - (NSMutableArray *) toArray;
 
-/** charからなる配列をNSDataに変換する
- *
- * @param  なし
- * @throws なし
- * @return NSMutableArray
+/*!
+ @abstract      charからなる配列をNSDataに変換する
+ @result        変換したNSData
  */
 -(NSData *) toNSData;
 
-/**************************************************************************/
-// 要素取得系
-/**************************************************************************/
-/** 単一要素に変換する
- *
- * @param  なし
- * @throws NSInvalidArgumentException   要素がない、複数件数ある場合
- * @return フィルタ後のリスト
+#pragma mark - 要素取得系
+
+/*!
+ @abstract      単一要素に変換する
+ @discussion    要素が無い場合には例外を返す。
+ @exception     NSInvalidArgumentException   要素がない、複数件数ある場合
+ @result        フィルタ後のリスト
  */
 -(id) single;
 
-/** 単一要素に変換する
- *
- * @param  なし
- * @throws NSInvalidArgumentException   複数件数ある場合
- * @return フィルタ後のリスト
+/*!
+ @abstract      単一要素に変換する
+ @discussion    要素が無い場合にnilを返す。
+ @exception     NSInvalidArgumentException   複数件数ある場合
+ @result        フィルタ後のリスト
  */
 -(id) singleOrNil;
 
-/** 指定位置の要素を取得する
- *
- * @param  index   取得対象クラス
- * @throws NSInvalidArgumentException   要素がない場合
- * @return フィルタ後のリスト
+/*!
+ @abstract      指定位置の要素を取得する
+ @discussion    要素が無い場合には例外を返す。
+ @param         index 取得対象
+ @exception     NSInvalidArgumentException   要素がない場合
+ @result        フィルタ後のリスト
  */
 -(id) elementAt:(int)index;
 
-/** 指定位置の要素を取得する
- *
- * @param  index   取得位置
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      指定位置の要素を取得する
+ @discussion    要素が無い場合にnilを返す。
+ @param         index 取得対象
+ @result        フィルタ後のリスト
  */
 -(id) elementOrNilAt:(int)index;
 
-/** 先頭要素のみ取得する
- *
- * @param  なし
- * @throws NSInvalidArgumentException   要素がない場合
- * @return フィルタ後のリスト
+
+/*!
+ @abstract      先頭要素のみ取得する
+ @discussion    要素が無い場合には例外を返す。
+ @exception     NSInvalidArgumentException   要素がない場合
+ @result        フィルタ後のリスト
  */
 -(id) first;
 
-/** 先頭要素のみ取得する
- *
- * @param  なし
- * @throws なし
- * @return フィルタ後のリスト
+
+/*!
+ @abstract      先頭要素のみ取得する
+ @discussion    要素が無い場合にnilを返す。
+ @result        フィルタ後のリスト
  */
 -(id) firstOrNil;
 
-/** 最終要素のみ取得する
- *
- * @param  なし
- * @throws NSInvalidArgumentException   要素がない場合
- * @return フィルタ後のリスト
+
+/*!
+ @abstract      最終要素のみ取得する
+ @discussion    要素が無い場合には例外を返す。
+ @exception     NSInvalidArgumentException   要素がない場合
+ @result        フィルタ後のリスト
  */
 -(id) last;
 
-/** 最終要素のみ取得する
- *
- * @param  class   取得対象クラス
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      最終要素のみ取得する
+ @discussion    要素が無い場合にnilを返す。
+ @result        フィルタ後のリスト
  */
 -(id) lastOrNil;
 
-
-/** 件数を取得する
- *
- * @param  なし
- * @throws なし
- * @return フィルタ後のリスト
+/*!
+ @abstract      件数を取得する
+ @result        件数
  */
 -(int) count;
 
-/** シーケンスの要素がすべて条件を満たすか調べる
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return なし
+/*!
+ @abstract      シーケンスの要素がすべて条件を満たすか調べる
+ @param         predicate 判定関数
+ @result        条件を満たす場合:YES 満たさない場合:NO
  */
 -(BOOL) all: (BOOL(^)(id)) predicate;
 
-/** シーケンスに条件を満たす要素が含まれるか調べる
- *
- * @param  predicate   判定関数
- * @throws なし
- * @return なし
+/*!
+ @abstract      シーケンスに条件を満たす要素が含まれるか調べる
+ @param         predicate 判定関数
+ @result        条件を満たす要素が含まれる場合:YES 含まれない場合:NO
  */
 -(BOOL) any: (BOOL(^)(id)) predicate;
 
-/** シーケンスに要素が含まれているか調べる
- *
- * @param  item   検証する要素
- * @throws なし
- * @return なし
+/*!
+ @abstract      シーケンスに要素が含まれているか調べる
+ @param         item 検証する要素
+ @result        検証する要素が含まれる場合:YES 含まれない場合:NO
  */
 -(BOOL) contains : (id) item;
 
-/** シーケンスが一致するか調べる
- *
- * @param  dst   比較するリスト
- * @throws なし
- * @return なし
+/*!
+ @abstract      シーケンスが一致するか調べる
+ @param         dst 比較するリスト
+ @result        シーケンスが一致場合:YES 一致しない場合:NO
  */
 -(BOOL) sequenceEqual: (NSEnumerator *)dst;
 
+#pragma mark - 処理関数系
 
-/**************************************************************************/
-// 処理関数系
-/**************************************************************************/
-/** リストに処理を適用する
- *
- * @param  action   処理関数
- * @throws なし
- * @return なし
+/*!
+ @abstract      リストに処理を適用する
+ @param     action 処理関数
  */
-- (void) forEach: (void(^)(id)) action;
+- (void) forEach: (void(^)(id item)) action;
 
 @end
