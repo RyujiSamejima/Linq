@@ -1,7 +1,5 @@
 //
 //  NSEnumerator+Query.m
-//  Agent
-//
 //
 
 #import "NSEnumerator+Query.h"
@@ -80,13 +78,13 @@
     }];
 }
 
-- (NSEnumerator *) ofClass: (Class) class
+- (NSEnumerator *) ofClass: (Class) classType
 {
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
         do {
             item = [src nextObject];
-        } while (item != nil && ![item isKindOfClass:class]);
+        } while (item != nil && ![item isKindOfClass:classType]);
 
         return item;
     }];

@@ -1,7 +1,5 @@
 //
 //  NSEnumerator+Query.h
-//  Agent
-//
 //
 
 /*!
@@ -23,7 +21,7 @@
 }
 
 /*!
- @abstract      CustomEnemeratorを作成する。
+ @abstract      CustomEnumeratorを作成する。
  @discussion    nextObjectの実行ブロックで初期化する。
  @param         src データ取得元
  @param         nextObject 次の要素
@@ -83,10 +81,10 @@
 #pragma mark - 変換系
 /*!
  @abstract      指定したクラスの物のみ取得する
- @param         class 取得対象クラス
+ @param         classType 取得対象クラス
  @result        フィルタ後のリスト
  */
-- (NSEnumerator *) ofClass: (Class) class;
+- (NSEnumerator *) ofClass: (Class) classType;
 
 /*!
  @abstract      リストを変換する
@@ -216,7 +214,7 @@
 /*!
  @abstract      指定個数に区切った配列で取得します
  @discussion    要素を指定個数ずつのNSArrayとして取得します。
- @param         count 処理する列挙子
+ @param         count 要素を区切る数
  @result        count毎に区切られた要素
  */
 - (NSEnumerator *) buffer:(int)count;
@@ -244,6 +242,7 @@
 /*!
  @abstract      NSDictionaryに変換する
  @param         keySelector ディクショナリのKeyへと変換する関数
+ @param         elementSelector ディクショナリのElementへと変換する関数
  @result        変換したNSDictionary
  */
 - (NSDictionary *) toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;
@@ -415,6 +414,6 @@
  @abstract      リストに処理を適用する
  @param     action 処理関数
  */
-- (void) forEach: (void(^)(id item)) action;
+- (void) forEach: (void(^)(id)) action;
 
 @end
