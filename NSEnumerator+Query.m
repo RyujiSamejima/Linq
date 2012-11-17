@@ -1,5 +1,5 @@
 //
-//  NSEnumerator+Additions.m
+//  NSEnumerator+Query.m
 //  Agent
 //
 //
@@ -36,9 +36,8 @@
 
 +(NSEnumerator *)fromNSData:(NSData*)data{
     
-    __block NSData * _data = data;
+    NSData * _data = data;
     __block int counter = 0;
-    
     
     return [[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
             while (counter < [_data length]) {
@@ -53,6 +52,33 @@
         }];
 }
 
++(NSEnumerator *)range:(int)start to:(int)count {
+    __block int counter = start;
+    return [[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+        while (counter < (start + count)) {
+            return [NSNumber numberWithInt:counter++];
+        }
+        return nil;
+    }];
+}
+
+
++(NSEnumerator *)repeat:(id)item count:(int)count {
+    __block int counter = 0;
+    return [[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+        while (counter < count) {
+            counter++;
+            return item;
+        }
+        return nil;
+    }];
+}
+
++(NSEnumerator *)empty {
+    return [[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+        return nil;
+    }];
+}
 
 - (NSEnumerator *) ofClass: (Class) class
 {
@@ -121,9 +147,12 @@
     __block int counter = 0;
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        while (counter++ < count && (item = [src nextObject]));
-        return item;
-        return nil;
+        while (counter++ < count)
+        {
+            if(!(item = [src nextObject]))
+                return nil;
+        }
+        return [src nextObject];
     }];
 }
 
@@ -139,13 +168,17 @@
 -(NSEnumerator *) skipWhileWithIndex: (BOOL(^)(id,int)) predicate
 {
     __block int counter = 0;
-    __block BOOL skipped = false;
+    __block BOOL skipped = NO;
     BOOL (^_predicate)(id,int) = [predicate copy];
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
         if (!skipped)
         {
-            while ((item = [src nextObject]) && _predicate(item,counter++));
+            do {
+                if(!(item = [src nextObject]))
+                    return nil;
+            } while (_predicate(item,counter++));
+            skipped = YES;
             return item;
         }
         return [src nextObject];
@@ -206,15 +239,14 @@
     }
     va_end(list);
     NSArray *result = [self toArray];
-    [result sortedArrayUsingDescriptors:array];
-    return [result objectEnumerator];
+    return [[result sortedArrayUsingDescriptors:array]objectEnumerator];
 }
 
 
 - (NSEnumerator *) selectMany: (id(^)(id)) selector
 {
     id (^_selector)(id) = [selector copy];
-    __block NSEnumerator *current = [self nextObject];
+    __block id current = [self nextObject];
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
         while ((item = [current nextObject]))
@@ -229,10 +261,27 @@
     }];
 }
 
+- (NSEnumerator *) distinct{
+    
+    __block NSMutableArray *returnedArray = [[NSMutableArray alloc]init];
+    return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+        id item;
+        while((item = [src nextObject]) != nil && [returnedArray containsObject:item]){
+            NSLog(@"skip : %@",item);
+        }
+        if(item)
+        {
+            NSLog(@"return %@",item);
+            [returnedArray addObject:item];
+            return item;
+        }
+        return item;
+    }];
+}
 
 - (NSEnumerator *) concat:(NSEnumerator *)dst
 {
-    __weak NSEnumerator *_dst = dst;
+    NSEnumerator *_dst = dst;
     __block BOOL isFirst = true;
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
@@ -256,7 +305,38 @@
 }
 
 
-- (NSMutableArray*) toArray
+- (NSEnumerator *) union:(NSEnumerator *)dst{
+    return [[self concat:dst]distinct];
+}
+
+- (NSEnumerator *) intersect:(NSEnumerator *)dst{
+    NSArray *dstArray = [dst toArray];
+    return [self where:^BOOL(id item) {
+        return [dstArray containsObject:item];
+    }];
+}
+
+- (NSEnumerator *) except:(NSEnumerator *)dst{
+    NSArray *dstArray = [dst toArray];
+    return [self where:^BOOL(id item) {
+        return ![dstArray containsObject:item];
+    }];
+}
+
+- (NSEnumerator *) buffer:(int)count;
+{
+    return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+        NSArray *result = [[src take:count]toArray];
+        return (result.count == 0) ? nil: result;
+    }];
+}
+
+- (NSArray*) toArray
+{
+    return [self allObjects];
+}
+
+- (NSMutableArray*) toMutableArray
 {
     NSMutableArray *result = [[NSMutableArray alloc]init];
     for (id value in self) {
@@ -265,6 +345,22 @@
     return result;
 }
 
+- (NSDictionary *) toDictionary: (id(^)(id)) keySelector{
+    NSArray* keyArray = [[(NSEnumerator*)[self copy]select:^id(id item) {
+        return keySelector(item);
+    }]toArray];
+    return [[NSDictionary alloc]initWithObjects:[self toArray] forKeys:keyArray];
+}
+
+- (NSDictionary *) toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector{
+    NSArray* keyArray = [[(NSEnumerator*)[self copy]select:^id(id item) {
+        return keySelector(item);
+    }]toArray];
+    NSArray* elementArray = [[self select:^id(id item) {
+        return elementSelector(item);
+    }]toArray];
+    return [[NSDictionary alloc]initWithObjects:elementArray forKeys:keyArray];
+}
 
 -(NSData *) toNSData
 {
@@ -275,35 +371,6 @@
         [result appendBytes:&charByte length:1];
     }
     return result;
-}
-
-
-
--(id) single
-{
-    id item = [self nextObject];
-    if(item && [self nextObject] == nil)
-        return item;
-    else
-        [[NSException exceptionWithName:NSInvalidArgumentException
-                                 reason:@"Result returned -1.."
-                               userInfo:nil]
-         raise];
-    return nil;
-}
-
-
--(id) singleOrNil
-{
-    id item = [self nextObject];
-    if([self nextObject] == nil)
-        return item;
-    else
-        [[NSException exceptionWithName:NSInvalidArgumentException
-                                 reason:@"Result returned -1.."
-                               userInfo:nil]
-         raise];
-    return nil;
 }
 
 
@@ -326,6 +393,40 @@
     return [[self toArray]objectAtIndex:index];
 }
 
+-(id) single
+{
+    id item = [self nextObject];
+    if(item && [self nextObject] == nil)
+        return item;
+    else
+        [[NSException exceptionWithName:NSInvalidArgumentException
+                                 reason:@"Result returned -1.."
+                               userInfo:nil]
+         raise];
+    return nil;
+}
+
+-(id) single:(BOOL(^)(id)) predicate
+{
+    return [[self where:predicate]single];
+}
+
+-(id) singleOrNil
+{
+    id item = [self nextObject];
+    if([self nextObject] == nil)
+        return item;
+    else
+        [[NSException exceptionWithName:NSInvalidArgumentException
+                                 reason:@"Result returned -1.."
+                               userInfo:nil]
+         raise];
+    return nil;
+}
+-(id) singleOrNil:(BOOL(^)(id)) predicate
+{
+    return [[self where:predicate]singleOrNil];
+}
 
 -(id) first
 {
@@ -340,10 +441,20 @@
     return nil;
 }
 
+-(id) first:(BOOL(^)(id)) predicate
+{
+    return [[self where:predicate]first];
+}
+
 
 -(id) firstOrNil
 {
     return [self nextObject];
+}
+
+-(id) firstOrNil:(BOOL(^)(id)) predicate
+{
+    return [[self where:predicate]firstOrNil];
 }
 
 
@@ -360,10 +471,20 @@
     return nil;
 }
 
+-(id) last:(BOOL(^)(id)) predicate
+{
+    return [[self where:predicate]last];
+}
+
 
 -(id) lastOrNil
 {
     return [[self toArray]lastObject];
+}
+
+-(id) lastOrNil:(BOOL(^)(id)) predicate
+{
+    return [[self where:predicate]lastOrNil];
 }
 
 
@@ -411,19 +532,9 @@
 
 -(BOOL) sequenceEqual: (NSEnumerator *)dst
 {
-    id srcItem;
-    id dstItem;
-    while ((srcItem = [self nextObject]))
-    {
-        if(!(dstItem = [dst nextObject]))
-            return NO;
-        
-        if(![srcItem isEqual:dstItem])
-            return NO;
-    }
-    if((dstItem = [self nextObject]))
-        return NO;
-    return YES;
+    NSArray *srcArray = [self toArray];
+    NSArray *dstArray = [dst toArray];
+    return [srcArray isEqualToArray:dstArray];
 }
 
 
