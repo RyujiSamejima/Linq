@@ -62,6 +62,8 @@ toArray;<br>
 toMutableArray;<br>
 toDictionary: (id(^)(id)) keySelector;<br>
 toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;<br>
+toMutableDictionary: (id(^)(id)) keySelector;<br>
+toMutableDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;<br>
 toNSData;<br>
 
 ###要素取得系
