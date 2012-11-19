@@ -344,20 +344,43 @@
 }
 
 - (NSDictionary *) toDictionary: (id(^)(id)) keySelector{
-    NSArray* keyArray = [[(NSEnumerator*)[self copy]select:^id(id item) {
+    
+    NSArray* objArray = [self toArray];
+    NSArray* keyArray = [[[objArray objectEnumerator] select:^id(id item) {
         return keySelector(item);
     }]toArray];
-    return [[NSDictionary alloc]initWithObjects:[self toArray] forKeys:keyArray];
+    return [[NSDictionary alloc]initWithObjects:objArray forKeys:keyArray];
 }
 
 - (NSDictionary *) toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector{
-    NSArray* keyArray = [[(NSEnumerator*)[self copy]select:^id(id item) {
+    NSArray* objArray = [self toArray];
+    NSArray* keyArray = [[[objArray objectEnumerator]select:^id(id item) {
         return keySelector(item);
     }]toArray];
-    NSArray* elementArray = [[self select:^id(id item) {
+    NSArray* elementArray = [[[objArray objectEnumerator] select:^id(id item) {
         return elementSelector(item);
     }]toArray];
     return [[NSDictionary alloc]initWithObjects:elementArray forKeys:keyArray];
+}
+
+- (NSMutableDictionary *) toMutableDictionary: (id(^)(id)) keySelector{
+    
+    NSArray* objArray = [self toArray];
+    NSArray* keyArray = [[[objArray objectEnumerator] select:^id(id item) {
+        return keySelector(item);
+    }]toArray];
+    return [[NSMutableDictionary alloc]initWithObjects:objArray forKeys:keyArray];
+}
+
+- (NSMutableDictionary *) toMutableDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector{
+    NSArray* objArray = [self toArray];
+    NSArray* keyArray = [[[objArray objectEnumerator]select:^id(id item) {
+        return keySelector(item);
+    }]toArray];
+    NSArray* elementArray = [[[objArray objectEnumerator] select:^id(id item) {
+        return elementSelector(item);
+    }]toArray];
+    return [[NSMutableDictionary alloc]initWithObjects:elementArray forKeys:keyArray];
 }
 
 -(NSData *) toNSData

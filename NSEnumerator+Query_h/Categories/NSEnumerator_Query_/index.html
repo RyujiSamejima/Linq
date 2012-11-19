@@ -352,6 +352,12 @@ function disclosure_triangle(elt) {
 <dt><tt><a href="index.html#//apple_ref/occ/instm/NSEnumerator(Query)/toMutableArray" target="_top">-toMutableArray</a></tt></dt>
 <dd><p>NSMutableArrayに変換する
 </dd>
+<dt><tt><a href="index.html#//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:" target="_top">-toMutableDictionary:</a></tt></dt>
+<dd><p>NSMutableDictionaryに変換する
+</dd>
+<dt><tt><a href="index.html#//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:" target="_top">-toMutableDictionary:elementSelector:</a></tt></dt>
+<dd><p>NSMutableDictionaryに変換する
+</dd>
 <dt><tt><a href="index.html#//apple_ref/occ/instm/NSEnumerator(Query)/toNSData" target="_top">-toNSData</a></tt></dt>
 <dd><p>charからなる配列をNSDataに変換する
 </dd>
@@ -450,7 +456,7 @@ function disclosure_triangle(elt) {
 <dl>
 <dt><!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/NSEnumerator(Query)/contains:/item;   name=contains:::item -->
 <a name="//apple_ref/doc/methodparam/NSEnumerator(Query)/contains:/item"></a>
-<code>item</code></dt><dd><p>検証する要素</dd>
+<code>item</code></dt><dd><p>検証する要�</dd>
 </dl>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>検証する要素が含まれる場合:YES 含まれない場合:NO
@@ -846,7 +852,7 @@ function disclosure_triangle(elt) {
 <dl>
 <dt><!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/NSEnumerator(Query)/repeat:count:/item;   name=repeat:count:::item -->
 <a name="//apple_ref/doc/methodparam/NSEnumerator(Query)/repeat:count:/item"></a>
-<code>item</code></dt><dd><p>要素</dd>
+<code>item</code></dt><dd><p>要�</dd>
 <dt><!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/NSEnumerator(Query)/repeat:count:/count;   name=repeat:count:::count -->
 <a name="//apple_ref/doc/methodparam/NSEnumerator(Query)/repeat:count:/count"></a>
 <code>count</code></dt><dd><p>数</dd>
@@ -1190,6 +1196,46 @@ function disclosure_triangle(elt) {
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>変換したNSMutableArray
 
+<!-- end return value --></p><hr class="betweenAPIEntries"><!-- headerDoc=instm;  uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:;   name=NSEnumerator(Query)::toMutableDictionary: -->
+<a name="//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:"></a>
+<h3><a name="toMutableDictionary:">toMutableDictionary:</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:;name=start --><!-- begin abstract --><p>NSMutableDictionaryに変換する
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:;name=start -->- (<!-- a logicalPath="//apple_ref/occ/cl/NSDictionary //apple_ref/occ/tdef/NSDictionary //apple_ref/occ/tag/NSDictionary //apple_ref/occ/struct/NSDictionary //apple_ref/occ/intf/NSDictionary //apple_ref/doc/anysymbol/NSDictionary" machineGenerated="true" --><span class="type">NSDictionary</span><!-- /a --> <span class="type">*</span>) <!-- a logicalPath="//apple_ref/occ/instm/NSEnumerator/toMutableDictionary //apple_ref/occ/clm/NSEnumerator/toMutableDictionary //apple_ref/occ/intfcm/NSEnumerator/toMutableDictionary //apple_ref/occ/intfm/NSEnumerator/toMutableDictionary //apple_ref/occ/func/toMutableDictionary //apple_ref/occ/ftmplt/NSEnumerator/toMutableDictionary //apple_ref/occ/defn/toMutableDictionary //apple_ref/occ/macro/toMutableDictionary //apple_ref/doc/anysymbol/toMutableDictionary" machineGenerated="true" --><span class="function">toMutableDictionary</span><!-- /a -->: (id(^)(<!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->)) <!-- a logicalPath="//apple_ref/occ/econst/keySelector //apple_ref/occ/data/NSEnumerator/keySelector //apple_ref/occ/data/keySelector //apple_ref/occ/clconst/NSEnumerator/keySelector " machineGenerated="true" --><span class="var">keySelector</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class='param_indent'>
+<dl>
+<dt><!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/NSEnumerator(Query)/toMutableDictionary:/keySelector;   name=toMutableDictionary:::keySelector -->
+<a name="//apple_ref/doc/methodparam/NSEnumerator(Query)/toMutableDictionary:/keySelector"></a>
+<code>keySelector</code></dt><dd><p>ディクショナリのKeyへと変換する関数</dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>変換したNSMutableDictionary
+
+<!-- end return value --></p><hr class="betweenAPIEntries"><!-- headerDoc=instm;  uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:;   name=NSEnumerator(Query)::toMutableDictionary:elementSelector: -->
+<a name="//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:"></a>
+<h3><a name="toMutableDictionary:elementSelector:">toMutableDictionary:elementSelector:</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:;name=start --><!-- begin abstract --><p>NSMutableDictionaryに変換する
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:;name=start -->- (<!-- a logicalPath="//apple_ref/occ/cl/NSDictionary //apple_ref/occ/tdef/NSDictionary //apple_ref/occ/tag/NSDictionary //apple_ref/occ/struct/NSDictionary //apple_ref/occ/intf/NSDictionary //apple_ref/doc/anysymbol/NSDictionary" machineGenerated="true" --><span class="type">NSDictionary</span><!-- /a --> <span class="type">*</span>) <!-- a logicalPath="//apple_ref/occ/instm/NSEnumerator/toMutableDictionary //apple_ref/occ/clm/NSEnumerator/toMutableDictionary //apple_ref/occ/intfcm/NSEnumerator/toMutableDictionary //apple_ref/occ/intfm/NSEnumerator/toMutableDictionary //apple_ref/occ/func/toMutableDictionary //apple_ref/occ/ftmplt/NSEnumerator/toMutableDictionary //apple_ref/occ/defn/toMutableDictionary //apple_ref/occ/macro/toMutableDictionary //apple_ref/doc/anysymbol/toMutableDictionary" machineGenerated="true" --><span class="function">toMutableDictionary</span><!-- /a -->: (id(^)(<!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->)) <span class="param">keySelector</span> 
+        <!-- a logicalPath="//apple_ref/occ/instm/NSEnumerator/elementSelector //apple_ref/occ/clm/NSEnumerator/elementSelector //apple_ref/occ/intfcm/NSEnumerator/elementSelector //apple_ref/occ/intfm/NSEnumerator/elementSelector //apple_ref/occ/func/elementSelector //apple_ref/occ/ftmplt/NSEnumerator/elementSelector //apple_ref/occ/defn/elementSelector //apple_ref/occ/macro/elementSelector //apple_ref/doc/anysymbol/elementSelector" machineGenerated="true" --><span class="function">elementSelector</span><!-- /a -->:(id(^)(<!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->)) <!-- a logicalPath="//apple_ref/occ/econst/elementSelector //apple_ref/occ/data/NSEnumerator/elementSelector //apple_ref/occ/data/elementSelector //apple_ref/occ/clconst/NSEnumerator/elementSelector " machineGenerated="true" --><span class="var">elementSelector</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/occ/instm/NSEnumerator(Query)/toMutableDictionary:elementSelector:;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class='param_indent'>
+<dl>
+<dt><!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/NSEnumerator(Query)/toMutableDictionary:elementSelector:/keySelector;   name=toMutableDictionary:elementSelector:::keySelector -->
+<a name="//apple_ref/doc/methodparam/NSEnumerator(Query)/toMutableDictionary:elementSelector:/keySelector"></a>
+<code>keySelector</code></dt><dd><p>ディクショナリのKeyへと変換する関数</dd>
+<dt><!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/NSEnumerator(Query)/toMutableDictionary:elementSelector:/elementSelector;   name=toMutableDictionary:elementSelector:::elementSelector -->
+<a name="//apple_ref/doc/methodparam/NSEnumerator(Query)/toMutableDictionary:elementSelector:/elementSelector"></a>
+<code>elementSelector</code></dt><dd><p>ディクショナリのElementへと変換する関数</dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>変換したNSMutableDictionary
+
 <!-- end return value --></p><hr class="betweenAPIEntries"><!-- headerDoc=instm;  uid=//apple_ref/occ/instm/NSEnumerator(Query)/toNSData;   name=NSEnumerator(Query)::toNSData -->
 <a name="//apple_ref/occ/instm/NSEnumerator(Query)/toNSData"></a>
 <h3><a name="toNSData">toNSData</a></h3>
@@ -1240,7 +1286,7 @@ function disclosure_triangle(elt) {
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/instm/NSEnumerator(Query)/whereWithIndex:;name=start --><p>条件に一致するもののみ取得する(index付)
 <!-- headerDoc=discussion;uid=//apple_ref/occ/instm/NSEnumerator(Query)/whereWithIndex:;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p><hr class="afterFooter"><div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Sunday, November 18, 2012
+<p class="hd_timestamp">Last Updated: 月曜日, 11月 19, 2012
 </p></div>
 </td></tr></table>
 </body></html>

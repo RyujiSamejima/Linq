@@ -248,6 +248,22 @@
 - (NSDictionary *) toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;
 
 /*!
+ @abstract      NSMutableDictionaryに変換する
+ @param         keySelector ディクショナリのKeyへと変換する関数
+ @result        変換したNSMutableDictionary
+ */
+- (NSDictionary *) toMutableDictionary: (id(^)(id)) keySelector;
+
+/*!
+ @abstract      NSMutableDictionaryに変換する
+ @param         keySelector ディクショナリのKeyへと変換する関数
+ @param         elementSelector ディクショナリのElementへと変換する関数
+ @result        変換したNSMutableDictionary
+ */
+- (NSDictionary *) toMutableDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;
+
+
+/*!
  @abstract      charからなる配列をNSDataに変換する
  @result        変換したNSData
  */
