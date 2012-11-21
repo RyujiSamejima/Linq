@@ -27,28 +27,40 @@
 @end
 
 
+@implementation NSData (Query)
 
-
-@implementation NSEnumerator (Query)
-
-
-+(NSEnumerator *)fromNSData:(NSData*)data{
-    
-    NSData * _data = data;
+-(NSEnumerator *)objectEnumerator {
+    __weak NSData *weakSelf = self;
     __block int counter = 0;
     
     return [[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
-            while (counter < [_data length]) {
-                
-                const void* chardata= [_data bytes] + counter;
-                
-                NSNumber * result = [NSNumber numberWithChar:(*((char *)chardata))];
-                counter++;
-                return result;
-            }
-            return nil;
-        }];
+        while (counter < [weakSelf length]) {
+            
+            return [NSNumber numberWithChar:(*((char *)([weakSelf bytes] + counter++)))];
+        }
+        return nil;
+    }];
 }
+
+@end
+
+@implementation NSString (Query)
+
+-(NSEnumerator *)objectEnumerator {
+    __weak NSString *weakSelf = self;
+    __block int counter = 0;
+    
+    return [[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+        while (counter < [weakSelf length]) {
+            return [NSNumber numberWithUnsignedShort:[weakSelf characterAtIndex:counter++]];
+        }
+        return nil;
+    }];
+}
+
+@end
+
+@implementation NSEnumerator (Query)
 
 +(NSEnumerator *)range:(int)start to:(int)count {
     __block int counter = start;
@@ -209,7 +221,7 @@
 -(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id,int)) predicate
 {
     __block int counter = 0;
-    __block BOOL taking = true;
+    __block BOOL taking = YES;
     BOOL (^_predicate)(id,int) = [predicate copy];
     return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
@@ -224,6 +236,25 @@
     }];
 }
 
+-(NSEnumerator *) scan: (id(^)(id,id)) func {
+    id (^_func)(id,id) = [func copy];
+    __block BOOL first = YES;
+    __block id result;
+    return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+        id item;
+        while ((item = [src nextObject]))
+        {
+            if (first) {
+                result = item;
+                first = NO;
+            } else {
+                result = _func(result, item);
+            }
+            return result;
+        }
+        return nil;
+    }];
+}
 
 -(NSEnumerator *)orderByDescription:(NSSortDescriptor *)firstObj, ... NS_REQUIRES_NIL_TERMINATION
 {
@@ -383,8 +414,7 @@
     return [[NSMutableDictionary alloc]initWithObjects:elementArray forKeys:keyArray];
 }
 
--(NSData *) toNSData
-{
+-(NSData *) toData {
     NSArray * array = [self allObjects];
     NSMutableData *result = [[NSMutableData alloc]initWithCapacity:[array count]];
     for (NSNumber * obj in array) {
@@ -394,6 +424,14 @@
     return result;
 }
 
+-(NSString *) toString {
+    __block NSString *str = [[NSString alloc]init];
+    [self forEach:^(id number) {
+        unichar charShort = [(NSNumber*)number unsignedShortValue];
+        [str stringByAppendingString:[NSString stringWithCharacters:&charShort length:1]];
+    }];
+    return str;
+}
 
 -(id) elementAt:(int)index
 {
@@ -567,3 +605,4 @@
 }
 
 @end
+

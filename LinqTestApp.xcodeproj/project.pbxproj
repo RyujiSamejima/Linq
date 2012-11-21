@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A33C6EE0165D11B2000B1284 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A33C6EDF165D11B2000B1284 /* README.md */; };
 		A37D01701657668800DB0B34 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D016F1657668800DB0B34 /* UIKit.framework */; };
 		A37D01721657668800DB0B34 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01711657668800DB0B34 /* Foundation.framework */; };
 		A37D01741657668800DB0B34 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01731657668800DB0B34 /* CoreGraphics.framework */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A33C6EDF165D11B2000B1284 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = SOURCE_ROOT; };
 		A37D016B1657668800DB0B34 /* LinqTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinqTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A37D016F1657668800DB0B34 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A37D01711657668800DB0B34 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -120,6 +122,7 @@
 		A37D01751657668800DB0B34 /* LinqTestApp */ = {
 			isa = PBXGroup;
 			children = (
+				A33C6EDF165D11B2000B1284 /* README.md */,
 				A37D01AE1657670C00DB0B34 /* NSEnumerator+Query.h */,
 				A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */,
 				A37D017E1657668800DB0B34 /* AppDelegate.h */,
@@ -241,6 +244,7 @@
 				A37D01841657668800DB0B34 /* Default@2x.png in Resources */,
 				A37D01861657668800DB0B34 /* Default-568h@2x.png in Resources */,
 				A37D01891657668800DB0B34 /* MainStoryboard.storyboard in Resources */,
+				A33C6EE0165D11B2000B1284 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

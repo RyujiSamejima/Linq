@@ -33,7 +33,6 @@ toArrayやforEachといったメソッドで即時実行させる事も可能で
 
 ##実装済みメソッド
 ###生成系
-fromNSData:(NSData*)data;<br>
 range:(int)start to:(int)count;<br>
 repeat:(id)item count:(int)count;<br>
 empty;<br>
@@ -64,7 +63,8 @@ toDictionary: (id(^)(id)) keySelector;<br>
 toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;<br>
 toMutableDictionary: (id(^)(id)) keySelector;<br>
 toMutableDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;<br>
-toNSData;<br>
+toData;<br>
+toString;<br>
 
 ###要素取得系
 elementAt:(int)index;<br>
@@ -92,5 +92,9 @@ sequenceEqual: (NSEnumerator *)dst;<br>
 ###処理関数系
 forEach: (void(^)(id item)) action;<br>
 
-
+##シーケンス生成の追加カテゴリ
+###NSData
+objectEnumerator<br>
+###NSString
+objectEnumerator<br>
 ====

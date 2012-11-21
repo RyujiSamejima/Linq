@@ -17,23 +17,53 @@
     /*! データ取得元 */
     NSEnumerator *_src;
     /*! 次の要素を取得する処理block */
-    id (^_nextObject)(NSEnumerator * src);
+    id (^_nextObject)(NSEnumerator *);
 }
 
 /*!
  @abstract      CustomEnumeratorを作成する。
  @discussion    nextObjectの実行ブロックで初期化する。
  @param         src データ取得元
- @param         nextObject 次の要素
+ @param         nextObject 次の要素を返却する処理ブロック
  @result        初期化されたCustomEnumerator
 */
 - (id)initWithFunction:(NSEnumerator *)src nextObjectBlock:(id(^)(NSEnumerator *))nextObject;
 
 /*!
  @abstract      次の要素を取得する。
- @result        次の要素
+ @result        次の要素 
  */
 - (id)nextObject;
+
+@end
+
+/*!
+ @abstract      リスト処理用カテゴリ
+ @discussion    リストに対して様々な処理を提供する
+ */
+@interface NSData (Query)
+
+/*!
+ @abstract      列挙子を作成する。
+ @discussion    NSData１バイト毎のchar配列の列挙子で初期化する。
+ @result        作成されたEnumerator
+ */
+-(NSEnumerator *)objectEnumerator;
+
+@end
+
+/*!
+ @abstract      リスト処理用カテゴリ
+ @discussion    リストに対して様々な処理を提供する
+ */
+@interface NSString (Query)
+
+/*!
+ @abstract      列挙子を作成する。
+ @discussion    １文字毎のunichar配列の列挙子で初期化する。
+ @result        作成されたEnumerator
+ */
+-(NSEnumerator *)objectEnumerator;
 
 @end
 
@@ -45,13 +75,6 @@
 
 
 #pragma mark - 生成系
-/*!
- @abstract      NSDataから列挙子を作成する。
- @discussion    NSData１バイト毎のchar配列の列挙子で初期化する。
- @param         data 生成元のNSData
- @result        作成されたEnumerator
- */
-+(NSEnumerator *)fromNSData:(NSData*)data;
 
 /*!
  @abstract      数値リストの列挙子を作成する
@@ -65,7 +88,7 @@
 /*!
  @abstract      要素を繰り返す列挙子を作成する。
  @discussion    指定要素をcount分繰り返すリストを作成する
- @param         item 要素
+ @param         item 繰り返す対象
  @param         count 数
  @result        作成されたEnumerator
  */
@@ -159,6 +182,14 @@
  @result        フィルタ後のリスト
  */
 -(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id,int)) predicate;
+
+/*!
+ @abstract      リストに関数適用を行い途中結果を列挙する
+ @discussion    リストに関数適用を行い途中結果を列挙する
+ @param         func 判定関数
+ @result        結果リスト
+ */
+-(NSEnumerator *) scan: (id(^)(id,id)) func;
 
 /*!
  @abstract      ソートする
@@ -267,7 +298,13 @@
  @abstract      charからなる配列をNSDataに変換する
  @result        変換したNSData
  */
--(NSData *) toNSData;
+-(NSData *) toData;
+
+/*!
+ @abstract      unicharからなる配列をNSStringに変換する
+ @result        変換したNSData
+ */
+-(NSString *) toString;
 
 #pragma mark - 要素取得系
 
@@ -412,7 +449,7 @@
 
 /*!
  @abstract      シーケンスに要素が含まれているか調べる
- @param         item 検証する要素
+ @param         item 検証する対象
  @result        検証する要素が含まれる場合:YES 含まれない場合:NO
  */
 -(BOOL) contains : (id) item;
