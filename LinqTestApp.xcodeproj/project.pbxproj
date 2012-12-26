@@ -385,6 +385,7 @@
 		A37D01A51657668800DB0B34 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LinqTestApp/LinqTestApp-Prefix.pch";
 				INFOPLIST_FILE = "LinqTestApp/LinqTestApp-Info.plist";
@@ -396,6 +397,7 @@
 		A37D01A61657668800DB0B34 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LinqTestApp/LinqTestApp-Prefix.pch";
 				INFOPLIST_FILE = "LinqTestApp/LinqTestApp-Info.plist";
