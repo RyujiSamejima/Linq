@@ -24,7 +24,7 @@
 		A37D01961657668800DB0B34 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01711657668800DB0B34 /* Foundation.framework */; };
 		A37D019E1657668800DB0B34 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A37D019C1657668800DB0B34 /* InfoPlist.strings */; };
 		A37D01A11657668800DB0B34 /* LinqTestAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01A01657668800DB0B34 /* LinqTestAppTests.m */; };
-		A37D01B01657670C00DB0B34 /* NSEnumerator+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */; };
+		A37D01B01657670C00DB0B34 /* NSEnumerator+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -354,7 +354,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -375,7 +375,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -385,7 +385,7 @@
 		A37D01A51657668800DB0B34 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LinqTestApp/LinqTestApp-Prefix.pch";
 				INFOPLIST_FILE = "LinqTestApp/LinqTestApp-Info.plist";
@@ -397,7 +397,7 @@
 		A37D01A61657668800DB0B34 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LinqTestApp/LinqTestApp-Prefix.pch";
 				INFOPLIST_FILE = "LinqTestApp/LinqTestApp-Info.plist";
