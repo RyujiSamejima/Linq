@@ -8,6 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		A33C6EE0165D11B2000B1284 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A33C6EDF165D11B2000B1284 /* README.md */; };
+		A364D33D169FAD7E0079CCE2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D017B1657668800DB0B34 /* main.m */; };
+		A364D33E169FAD7E0079CCE2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D017F1657668800DB0B34 /* AppDelegate.m */; };
+		A364D33F169FAD7E0079CCE2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D018B1657668800DB0B34 /* ViewController.m */; };
+		A364D340169FAD7E0079CCE2 /* NSEnumerator+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A364D342169FAD7E0079CCE2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D016F1657668800DB0B34 /* UIKit.framework */; };
+		A364D343169FAD7E0079CCE2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01711657668800DB0B34 /* Foundation.framework */; };
+		A364D344169FAD7E0079CCE2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01731657668800DB0B34 /* CoreGraphics.framework */; };
+		A364D346169FAD7E0079CCE2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A37D01781657668800DB0B34 /* InfoPlist.strings */; };
+		A364D347169FAD7E0079CCE2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A37D01811657668800DB0B34 /* Default.png */; };
+		A364D348169FAD7E0079CCE2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A37D01831657668800DB0B34 /* Default@2x.png */; };
+		A364D349169FAD7E0079CCE2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A37D01851657668800DB0B34 /* Default-568h@2x.png */; };
+		A364D34A169FAD7E0079CCE2 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A37D01871657668800DB0B34 /* MainStoryboard.storyboard */; };
+		A364D34B169FAD7E0079CCE2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A33C6EDF165D11B2000B1284 /* README.md */; };
 		A37D01701657668800DB0B34 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D016F1657668800DB0B34 /* UIKit.framework */; };
 		A37D01721657668800DB0B34 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01711657668800DB0B34 /* Foundation.framework */; };
 		A37D01741657668800DB0B34 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01731657668800DB0B34 /* CoreGraphics.framework */; };
@@ -39,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		A33C6EDF165D11B2000B1284 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = SOURCE_ROOT; };
+		A364D34F169FAD7E0079CCE2 /* LinqTestApp copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LinqTestApp copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A364D351169FAD7F0079CCE2 /* LinqTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LinqTestApp copy-Info.plist"; path = "/Users/samejima/Documents/work/Project/Linq/LinqTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		A37D016B1657668800DB0B34 /* LinqTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinqTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A37D016F1657668800DB0B34 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A37D01711657668800DB0B34 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -66,6 +81,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A364D341169FAD7E0079CCE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A364D342169FAD7E0079CCE2 /* UIKit.framework in Frameworks */,
+				A364D343169FAD7E0079CCE2 /* Foundation.framework in Frameworks */,
+				A364D344169FAD7E0079CCE2 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A37D01681657668700DB0B34 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -96,6 +121,7 @@
 				A37D01991657668800DB0B34 /* LinqTestAppTests */,
 				A37D016E1657668800DB0B34 /* Frameworks */,
 				A37D016C1657668800DB0B34 /* Products */,
+				A364D351169FAD7F0079CCE2 /* LinqTestApp copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,6 +130,7 @@
 			children = (
 				A37D016B1657668800DB0B34 /* LinqTestApp.app */,
 				A37D01921657668800DB0B34 /* LinqTestAppTests.octest */,
+				A364D34F169FAD7E0079CCE2 /* LinqTestApp copy.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,6 +198,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A364D33B169FAD7E0079CCE2 /* LinqTestApp copy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A364D34C169FAD7E0079CCE2 /* Build configuration list for PBXNativeTarget "LinqTestApp copy" */;
+			buildPhases = (
+				A364D33C169FAD7E0079CCE2 /* Sources */,
+				A364D341169FAD7E0079CCE2 /* Frameworks */,
+				A364D345169FAD7E0079CCE2 /* Resources */,
+				A364D360169FAE0F0079CCE2 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "LinqTestApp copy";
+			productName = LinqTestApp;
+			productReference = A364D34F169FAD7E0079CCE2 /* LinqTestApp copy.app */;
+			productType = "com.apple.product-type.application";
+		};
 		A37D016A1657668700DB0B34 /* LinqTestApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A37D01A41657668800DB0B34 /* Build configuration list for PBXNativeTarget "LinqTestApp" */;
@@ -230,11 +275,25 @@
 			targets = (
 				A37D016A1657668700DB0B34 /* LinqTestApp */,
 				A37D01911657668800DB0B34 /* LinqTestAppTests */,
+				A364D33B169FAD7E0079CCE2 /* LinqTestApp copy */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A364D345169FAD7E0079CCE2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A364D346169FAD7E0079CCE2 /* InfoPlist.strings in Resources */,
+				A364D347169FAD7E0079CCE2 /* Default.png in Resources */,
+				A364D348169FAD7E0079CCE2 /* Default@2x.png in Resources */,
+				A364D349169FAD7E0079CCE2 /* Default-568h@2x.png in Resources */,
+				A364D34A169FAD7E0079CCE2 /* MainStoryboard.storyboard in Resources */,
+				A364D34B169FAD7E0079CCE2 /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A37D01691657668700DB0B34 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,6 +318,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A364D360169FAE0F0079CCE2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm -rf ./NSEnumerator+Query_h\nmkdir -p ../NSEnumerator+Query_h\nfind ./NSEnumerator+Query.h -name \\*.h -print | xargs headerdoc2html -o ./NSEnumerator+Query_h\ngatherheaderdoc ./NSEnumerator+Query_h";
+		};
 		A37D01901657668800DB0B34 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -275,6 +347,17 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A364D33C169FAD7E0079CCE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A364D33D169FAD7E0079CCE2 /* main.m in Sources */,
+				A364D33E169FAD7E0079CCE2 /* AppDelegate.m in Sources */,
+				A364D33F169FAD7E0079CCE2 /* ViewController.m in Sources */,
+				A364D340169FAD7E0079CCE2 /* NSEnumerator+Query.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A37D01671657668700DB0B34 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -332,6 +415,30 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A364D34D169FAD7E0079CCE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LinqTestApp/LinqTestApp-Prefix.pch";
+				INFOPLIST_FILE = "LinqTestApp copy-Info.plist";
+				PRODUCT_NAME = "LinqTestApp copy";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A364D34E169FAD7E0079CCE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LinqTestApp/LinqTestApp-Prefix.pch";
+				INFOPLIST_FILE = "LinqTestApp copy-Info.plist";
+				PRODUCT_NAME = "LinqTestApp copy";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		A37D01A21657668800DB0B34 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -443,6 +550,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A364D34C169FAD7E0079CCE2 /* Build configuration list for PBXNativeTarget "LinqTestApp copy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A364D34D169FAD7E0079CCE2 /* Debug */,
+				A364D34E169FAD7E0079CCE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A37D01651657668700DB0B34 /* Build configuration list for PBXProject "LinqTestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
