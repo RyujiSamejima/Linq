@@ -12,3 +12,34 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+
+// ARC & memory management
+// Use these prefixes to be compatible with ARC on iOS 5/ ARC on iOS 4.X / non-ARC
+//
+#if __has_feature(objc_arc_weak) // iOS 5 or above
+#define __my_block_weak        __weak
+#define __my_block_weak_unsafe __weak
+#elif __has_feature(objc_arc)    // iOS 4.X
+#define __my_block_weak        __strong
+#define __my_block_weak_unsafe __unsafe_unretained
+#else                            // iOS 3.X or non-ARC projects
+#define __my_block_weak        __strong
+#define __my_block_weak_unsafe __block
+#endif
+
+#ifndef AH_RETAIN
+#if __has_feature(objc_arc)
+#define AH_RETAIN(x) x
+#define AH_RELEASE(x)
+#define AH_AUTORELEASE(x) x
+#define AH_SUPER_DEALLOC
+#else
+#define __AH_WEAK
+#define AH_WEAK assign
+#define AH_RETAIN(x) [x retain]
+#define AH_RELEASE(x) [x release]
+#define AH_AUTORELEASE(x) [x autorelease]
+#define AH_SUPER_DEALLOC [super dealloc]
+#endif
+#endif

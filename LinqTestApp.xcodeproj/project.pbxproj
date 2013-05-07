@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A33C6EE0165D11B2000B1284 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A33C6EDF165D11B2000B1284 /* README.md */; };
+		A34517191731E92F008826BB /* LQXDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A34517181731E92F008826BB /* LQXDocument.m */; };
+		A345171D17390136008826BB /* LinqToXml.md in Resources */ = {isa = PBXBuildFile; fileRef = A345171C17390136008826BB /* LinqToXml.md */; };
 		A364D33D169FAD7E0079CCE2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D017B1657668800DB0B34 /* main.m */; };
 		A364D33E169FAD7E0079CCE2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D017F1657668800DB0B34 /* AppDelegate.m */; };
 		A364D33F169FAD7E0079CCE2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D018B1657668800DB0B34 /* ViewController.m */; };
@@ -37,7 +39,7 @@
 		A37D01961657668800DB0B34 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A37D01711657668800DB0B34 /* Foundation.framework */; };
 		A37D019E1657668800DB0B34 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A37D019C1657668800DB0B34 /* InfoPlist.strings */; };
 		A37D01A11657668800DB0B34 /* LinqTestAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01A01657668800DB0B34 /* LinqTestAppTests.m */; };
-		A37D01B01657670C00DB0B34 /* NSEnumerator+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A37D01B01657670C00DB0B34 /* NSEnumerator+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,9 @@
 
 /* Begin PBXFileReference section */
 		A33C6EDF165D11B2000B1284 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = SOURCE_ROOT; };
+		A34517171731E92F008826BB /* LQXDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LQXDocument.h; sourceTree = SOURCE_ROOT; };
+		A34517181731E92F008826BB /* LQXDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LQXDocument.m; sourceTree = SOURCE_ROOT; };
+		A345171C17390136008826BB /* LinqToXml.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LinqToXml.md; sourceTree = "<group>"; };
 		A364D34F169FAD7E0079CCE2 /* LinqTestApp copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LinqTestApp copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A364D351169FAD7F0079CCE2 /* LinqTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LinqTestApp copy-Info.plist"; path = "/Users/samejima/Documents/work/Project/Linq/LinqTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		A37D016B1657668800DB0B34 /* LinqTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinqTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,7 +154,8 @@
 		A37D01751657668800DB0B34 /* LinqTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				A33C6EDF165D11B2000B1284 /* README.md */,
+				A34517171731E92F008826BB /* LQXDocument.h */,
+				A34517181731E92F008826BB /* LQXDocument.m */,
 				A37D01AE1657670C00DB0B34 /* NSEnumerator+Query.h */,
 				A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */,
 				A37D017E1657668800DB0B34 /* AppDelegate.h */,
@@ -157,6 +163,8 @@
 				A37D01871657668800DB0B34 /* MainStoryboard.storyboard */,
 				A37D018A1657668800DB0B34 /* ViewController.h */,
 				A37D018B1657668800DB0B34 /* ViewController.m */,
+				A33C6EDF165D11B2000B1284 /* README.md */,
+				A345171C17390136008826BB /* LinqToXml.md */,
 				A37D01761657668800DB0B34 /* Supporting Files */,
 			);
 			path = LinqTestApp;
@@ -304,6 +312,7 @@
 				A37D01861657668800DB0B34 /* Default-568h@2x.png in Resources */,
 				A37D01891657668800DB0B34 /* MainStoryboard.storyboard in Resources */,
 				A33C6EE0165D11B2000B1284 /* README.md in Resources */,
+				A345171D17390136008826BB /* LinqToXml.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,7 +338,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf ./NSEnumerator+Query_h\nmkdir -p ../NSEnumerator+Query_h\nfind ./NSEnumerator+Query.h -name \\*.h -print | xargs headerdoc2html -o ./NSEnumerator+Query_h\ngatherheaderdoc ./NSEnumerator+Query_h";
+			shellScript = "rm -rf ./LQXDocument_h\nmkdir -p ../LQXDocument_h\nfind ./LQXDocument.h -name \\*.h -print | xargs headerdoc2html -o ./LQXDocument_h\ngatherheaderdoc ./LQXDocument_h\n\nrm -rf ./NSEnumerator+Query_h\nmkdir -p ../NSEnumerator+Query_h\nfind ./NSEnumerator+Query.h -name \\*.h -print | xargs headerdoc2html -o ./NSEnumerator+Query_h\ngatherheaderdoc ./NSEnumerator+Query_h\n";
 		};
 		A37D01901657668800DB0B34 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -366,6 +375,7 @@
 				A37D01801657668800DB0B34 /* AppDelegate.m in Sources */,
 				A37D018C1657668800DB0B34 /* ViewController.m in Sources */,
 				A37D01B01657670C00DB0B34 /* NSEnumerator+Query.m in Sources */,
+				A34517191731E92F008826BB /* LQXDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,8 +471,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lxml2";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -482,8 +494,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = "-lxml2";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

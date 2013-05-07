@@ -3,7 +3,7 @@
 //
 
 //従来のメソッドバージョンを使用する場合は下記defineをコメントに
-#define USE_METHOD_CHAIN
+//#define USE_METHOD_CHAIN
 
 /*!
  @header      NSEnumerator+Query.h
@@ -29,12 +29,12 @@
  @param         src データ取得元
  @param         nextObject 次の要素を返却する処理ブロック
  @result        初期化されたCustomEnumerator
-*/
+ */
 - (id)initWithFunction:(NSEnumerator *)src nextObjectBlock:(id(^)(NSEnumerator *))nextObject;
 
 /*!
  @abstract      次の要素を取得する。
- @result        次の要素 
+ @result        次の要素
  */
 - (id)nextObject;
 
@@ -451,6 +451,10 @@
  @abstract      リストに処理を適用する
  */
 @property (readonly) void(^forEach)(void(^action)(id item));
+/*!
+ @abstract      リストに処理を適用する
+ */
+@property (readonly) void(^forEach)(void(^action)(id item, int index));
 
 //従来のメソッドバージョン
 #else
@@ -532,7 +536,7 @@
  @param         selector 変換関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) select: (id(^)(id)) selector;
+-(NSEnumerator *) select: (id(^)(id item)) selector;
 
 /*!
  @abstract      リストを変換する
@@ -540,14 +544,14 @@
  @param         selector 変換関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) selectWithIndex: (id(^)(id,int)) selector;
+-(NSEnumerator *) selectWithIndex: (id(^)(id item,int index)) selector;
 
 /*!
  @abstract      条件に一致するもののみ取得する
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) where: (BOOL(^)(id)) predicate;
+-(NSEnumerator *) where: (BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      条件に一致するもののみ取得する
@@ -555,7 +559,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) whereWithIndex: (BOOL(^)(id,int)) predicate;
+-(NSEnumerator *) whereWithIndex: (BOOL(^)(id item,int index)) predicate;
 
 /*!
  @abstract      指定された数だけ読み飛ばす
@@ -569,7 +573,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) skipWhile: (BOOL(^)(id)) predicate;
+-(NSEnumerator *) skipWhile: (BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      条件に一致する間は読み飛ばす
@@ -577,7 +581,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) skipWhileWithIndex: (BOOL(^)(id,int)) predicate;
+-(NSEnumerator *) skipWhileWithIndex: (BOOL(^)(id item,int index)) predicate;
 
 /*!
  @abstract      指定された数だけ取得する
@@ -591,7 +595,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) takeWhile: (BOOL(^)(id)) predicate;
+-(NSEnumerator *) takeWhile: (BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      条件に一致する間は取得する
@@ -599,7 +603,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id,int)) predicate;
+-(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id item,int index)) predicate;
 
 /*!
  @abstract      リストに関数適用を行い途中結果を列挙する
@@ -607,7 +611,7 @@
  @param         func 判定関数
  @result        結果リスト
  */
--(NSEnumerator *) scan: (id(^)(id,id)) func;
+-(NSEnumerator *) scan: (id(^)(id item1,id item2)) func;
 
 /*!
  @abstract      ソートする
@@ -621,7 +625,7 @@
  @param         selector 変換関数
  @result        展開後のリスト
  */
-- (NSEnumerator *) selectMany: (id(^)(id)) selector;
+- (NSEnumerator *) selectMany: (id(^)(id item)) selector;
 
 /*!
  @abstract      リストを重複を除外して連結する
@@ -686,7 +690,7 @@
  @param         keySelector ディクショナリのKeyへと変換する関数
  @result        変換したNSDictionary
  */
-- (NSDictionary *) toDictionary: (id(^)(id)) keySelector;
+- (NSDictionary *) toDictionary: (id(^)(id item)) keySelector;
 
 /*!
  @abstract      NSDictionaryに変換する
@@ -694,14 +698,14 @@
  @param         elementSelector ディクショナリのElementへと変換する関数
  @result        変換したNSDictionary
  */
-- (NSDictionary *) toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;
+- (NSDictionary *) toDictionary: (id(^)(id item)) keySelector elementSelector:(id(^)(id item)) elementSelector;
 
 /*!
  @abstract      NSMutableDictionaryに変換する
  @param         keySelector ディクショナリのKeyへと変換する関数
  @result        変換したNSMutableDictionary
  */
-- (NSDictionary *) toMutableDictionary: (id(^)(id)) keySelector;
+- (NSDictionary *) toMutableDictionary: (id(^)(id item)) keySelector;
 
 /*!
  @abstract      NSMutableDictionaryに変換する
@@ -709,7 +713,7 @@
  @param         elementSelector ディクショナリのElementへと変換する関数
  @result        変換したNSMutableDictionary
  */
-- (NSDictionary *) toMutableDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector;
+- (NSDictionary *) toMutableDictionary: (id(^)(id item)) keySelector elementSelector:(id(^)(id item)) elementSelector;
 
 
 /*!
@@ -758,7 +762,7 @@
  @exception     NSInvalidArgumentException   要素がない、複数件数ある場合
  @result        フィルタ後のリスト
  */
--(id) single:(BOOL(^)(id)) predicate;
+-(id) single:(BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      単一要素に変換する
@@ -775,7 +779,7 @@
  @exception     NSInvalidArgumentException   複数件数ある場合
  @result        フィルタ後のリスト
  */
--(id) singleOrNil:(BOOL(^)(id)) predicate;
+-(id) singleOrNil:(BOOL(^)(id item)) predicate;
 
 
 
@@ -794,7 +798,7 @@
  @exception     NSInvalidArgumentException   要素がない場合
  @result        フィルタ後のリスト
  */
--(id) first:(BOOL(^)(id)) predicate;
+-(id) first:(BOOL(^)(id item)) predicate;
 
 
 /*!
@@ -810,7 +814,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(id) firstOrNil:(BOOL(^)(id)) predicate;
+-(id) firstOrNil:(BOOL(^)(id item)) predicate;
 
 
 /*!
@@ -828,7 +832,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(id) last:(BOOL(^)(id)) predicate;
+-(id) last:(BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      最終要素のみ取得する
@@ -843,7 +847,7 @@
  @param         predicate 判定関数
  @result        フィルタ後のリスト
  */
--(id) lastOrNil:(BOOL(^)(id)) predicate;
+-(id) lastOrNil:(BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      件数を取得する
@@ -856,14 +860,14 @@
  @param         predicate 判定関数
  @result        条件を満たす場合:YES 満たさない場合:NO
  */
--(BOOL) all: (BOOL(^)(id)) predicate;
+-(BOOL) all: (BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      シーケンスに条件を満たす要素が含まれるか調べる
  @param         predicate 判定関数
  @result        条件を満たす要素が含まれる場合:YES 含まれない場合:NO
  */
--(BOOL) any: (BOOL(^)(id)) predicate;
+-(BOOL) any: (BOOL(^)(id item)) predicate;
 
 /*!
  @abstract      シーケンスに要素が含まれているか調べる
@@ -885,7 +889,13 @@
  @abstract      リストに処理を適用する
  @param     action 処理関数
  */
-- (void) forEach: (void(^)(id)) action;
+- (void) forEach: (void(^)(id item)) action;
+
+/*!
+ @abstract      リストに処理を適用する
+ @param     action 処理関数
+ */
+- (void) forEachWithIndex: (void(^)(id item,int index)) action;
 
 #endif
 

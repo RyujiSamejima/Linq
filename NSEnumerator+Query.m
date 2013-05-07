@@ -8,19 +8,17 @@
 @implementation CustomEnumerator
 
 
-- (id)initWithFunction:(NSEnumerator *)src nextObjectBlock:(id(^)(NSEnumerator *))nextObject
-{
+- (id)initWithFunction:(NSEnumerator *)src nextObjectBlock:(id(^)(NSEnumerator *))nextObject {
     self = [super init];
     if(self) {
         _src = src;
-        _nextObject = [[nextObject copy]autorelease];
+        _nextObject = AH_AUTORELEASE([nextObject copy]);
     }
     return self;
 }
 
 
-- (id)nextObject
-{
+- (id)nextObject {
     return _nextObject(_src);
 }
 
@@ -32,19 +30,18 @@
 @implementation NSData (Query)
 
 @dynamic getEnumerator;
--(NSEnumerator *(^)())getEnumerator
-{
-    __unsafe_unretained NSData *weakSelf = self;
-    return [[^() {
+-(NSEnumerator *(^)())getEnumerator {
+    __weak NSData *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         __block int counter = 0;
-        return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
             while (counter < [weakSelf length]) {
                 
                 return [NSNumber numberWithChar:(*((char *)([weakSelf bytes] + counter++)))];
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @end
@@ -52,19 +49,18 @@
 @implementation NSString (Query)
 
 @dynamic getEnumerator;
--(NSEnumerator *(^)())getEnumerator
-{
-    __unsafe_unretained NSString *weakSelf = self;
-    return [[^() {
+-(NSEnumerator *(^)())getEnumerator {
+    __weak NSString *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         __block int counter = 0;
         
-        return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
             while (counter < [weakSelf length]) {
                 return [NSNumber numberWithUnsignedShort:[weakSelf characterAtIndex:counter++]];
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @end
@@ -72,12 +68,11 @@
 @implementation NSArray (Query)
 
 @dynamic getEnumerator;
--(NSEnumerator *(^)())getEnumerator
-{
-    __unsafe_unretained NSArray *weakSelf = self;
-    return [[^() {
+-(NSEnumerator *(^)())getEnumerator {
+    __weak NSArray *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         return [weakSelf objectEnumerator];
-    }copy]autorelease];
+    }copy]);
 }
 
 @end
@@ -85,21 +80,19 @@
 @implementation NSDictionary (Query)
 
 @dynamic getEnumerator;
--(NSEnumerator *(^)())getEnumerator
-{
-    __unsafe_unretained NSDictionary *weakSelf = self;
-    return [[^() {
+-(NSEnumerator *(^)())getEnumerator {
+    __weak NSDictionary *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         return [weakSelf objectEnumerator];
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic getKeyEnumerator;
--(NSEnumerator *(^)())getKeyEnumerator
-{
-    __unsafe_unretained NSDictionary *weakSelf = self;
-    return [[^() {
+-(NSEnumerator *(^)())getKeyEnumerator {
+    __weak NSDictionary *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         return [weakSelf keyEnumerator];
-    }copy]autorelease];
+    }copy]);
 }
 
 @end
@@ -109,116 +102,110 @@
 
 +(NSEnumerator *)range:(int)start to:(int)count {
     __block int counter = start;
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         while (counter < (start + count)) {
             return [NSNumber numberWithInt:counter++];
         }
         return nil;
-    }]autorelease];
+    }]);
 }
 
 
 +(NSEnumerator *)repeat:(id)item count:(int)count {
     __block int counter = 0;
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         while (counter < count) {
             counter++;
             return item;
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 +(NSEnumerator *)empty {
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         return nil;
-    }]autorelease];
+    }]);
 }
 
 @dynamic ofClass;
-- (NSEnumerator *(^)(Class))ofClass
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^NSEnumerator *(Class classType) {
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+- (NSEnumerator *(^)(Class))ofClass {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^NSEnumerator *(Class classType) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             do {
                 item = [src nextObject];
             } while (item != nil && ![item isKindOfClass:classType]);
             
             return item;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic select;
--(NSEnumerator *(^)(id(^)(id)))select
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id (^selector)(id)) {
-        id (^_selector)(id) = [[selector copy]autorelease];
+-(NSEnumerator *(^)(id(^)(id)))select {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id (^selector)(id)) {
+        id (^_selector)(id) = AH_AUTORELEASE([selector copy]);
         return weakSelf.selectWithIndex(^id(id item, int index) {
             return _selector(item);
         });
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic selectWithIndex;
--(NSEnumerator *(^)(id(^)(id,int)))selectWithIndex
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id(^selector)(id,int)) {
+-(NSEnumerator *(^)(id(^)(id,int)))selectWithIndex {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id(^selector)(id,int)) {
         __block int counter = 0;
-        id (^_selector)(id,int) = [[selector copy]autorelease];
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        id (^_selector)(id,int) = AH_AUTORELEASE([selector copy]);
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while ((item = [src nextObject]))
             {
                 return _selector(item,counter++);
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic where;
--(NSEnumerator *(^)(BOOL(^)(id)))where
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+-(NSEnumerator *(^)(BOOL(^)(id)))where {
+    __weak NSEnumerator *weakSelf = self;
     return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.whereWithIndex(^BOOL(id item, int index) {
             return _predicate(item);
         });
-    }copy]autorelease];
+    }copy];
 }
-
+            
 @dynamic whereWithIndex;
--(NSEnumerator *(^)(BOOL(^)(id,int)))whereWithIndex
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id,int)) {
+-(NSEnumerator *(^)(BOOL(^)(id,int)))whereWithIndex {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id,int)) {
         __block int counter = 0;
-        BOOL (^_predicate)(id,int) = [[predicate copy]autorelease];
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        BOOL (^_predicate)(id,int) = AH_AUTORELEASE([predicate copy]);
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while ((item = [src nextObject]))
             {
                 if(_predicate(item,counter++))
-                return item;
+                    return item;
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic skip;
--(NSEnumerator *(^)(int))skip
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(int count) {
+-(NSEnumerator *(^)(int))skip {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(int count) {
         __block int counter = 0;
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while (counter++ < count)
             {
@@ -226,32 +213,30 @@
                     return nil;
             }
             return [src nextObject];
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic skipWhile;
--(NSEnumerator *(^)(BOOL(^)(id)))skipWhile
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(NSEnumerator *(^)(BOOL(^)(id)))skipWhile {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.skipWhileWithIndex(^BOOL(id item, int index) {
             return _predicate(item);
         });
-    }copy]autorelease];
+    }copy]);
     
 }
 
 @dynamic skipWhileWithIndex;
--(NSEnumerator *(^)(BOOL(^)(id,int)))skipWhileWithIndex
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+-(NSEnumerator *(^)(BOOL(^)(id,int)))skipWhileWithIndex {
+    __weak NSEnumerator *weakSelf = self;
     return [[^(BOOL(^predicate)(id,int)) {
         __block int counter = 0;
         __block BOOL skipped = NO;
-        BOOL (^_predicate)(id,int) = [[predicate copy]autorelease];
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        BOOL (^_predicate)(id,int) = AH_AUTORELEASE([predicate copy]);
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             if (!skipped)
             {
@@ -263,47 +248,44 @@
                 return item;
             }
             return [src nextObject];
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic take;
--(NSEnumerator *(^)(int))take
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(int count) {
+-(NSEnumerator *(^)(int))take {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(int count) {
         __block int counter = 0;
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             if (counter++ < count && (item = [src nextObject]))
             {
                 return item;
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic takeWhile;
--(NSEnumerator *(^)(BOOL(^)(id)))takeWhile
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
+-(NSEnumerator *(^)(BOOL(^)(id)))takeWhile {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
         return weakSelf.takeWhileWithIndex(^BOOL(id item, int index) {
             return predicate(item);
         });
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic takeWhileWithIndex;
--(NSEnumerator *(^)(BOOL(^)(id,int)))takeWhileWithIndex
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id,int)) {
+-(NSEnumerator *(^)(BOOL(^)(id,int)))takeWhileWithIndex {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id,int)) {
         __block int counter = 0;
         __block BOOL taking = YES;
-        BOOL (^_predicate)(id,int) = [[predicate copy]autorelease];
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        BOOL (^_predicate)(id,int) = AH_AUTORELEASE([predicate copy]);
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             if (taking && (item = [src nextObject]))
             {
@@ -313,19 +295,18 @@
                 }
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic scan;
--(NSEnumerator *(^)(id(^)(id,id)))scan
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id(^accumlator)(id, id)) {
-        id (^_accumlator)(id,id) = [[accumlator copy]autorelease];
+-(NSEnumerator *(^)(id(^)(id,id)))scan {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id(^accumlator)(id, id)) {
+        id (^_accumlator)(id,id) = AH_AUTORELEASE([accumlator copy]);
         __block BOOL first = YES;
         __block id result;
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while ((item = [src nextObject]))
             {
@@ -338,18 +319,17 @@
                 return result;
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic orderByDescription;
--(NSEnumerator *(^)(NSSortDescriptor *, ...))orderByDescription
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(NSSortDescriptor *firstObj, ...) {
+-(NSEnumerator *(^)(NSSortDescriptor *, ...))orderByDescription {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(NSSortDescriptor *firstObj, ...) {
         va_list list;
         va_start(list, firstObj);
-        NSMutableArray *array = [[[NSMutableArray alloc]initWithObjects:firstObj, nil] autorelease];
+        NSMutableArray *array = AH_AUTORELEASE([[NSMutableArray alloc]initWithObjects:firstObj, nil]);
         NSSortDescriptor *desc;
         while((desc = va_arg(list, NSSortDescriptor*)))
         {
@@ -358,17 +338,16 @@
         va_end(list);
         NSArray *result = weakSelf.toArray();
         return [result sortedArrayUsingDescriptors:array].getEnumerator();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic selectMany;
-- (NSEnumerator *(^)(id(^)(id)))selectMany
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+- (NSEnumerator *(^)(id(^)(id)))selectMany {
+    __weak NSEnumerator *weakSelf = self;
     return [[^(id(^selector)(id)) {
-        id (^_selector)(id) = [[selector copy]autorelease];
+        id (^_selector)(id) = AH_AUTORELEASE([selector copy]);
         __block id current = [self nextObject];
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while ((item = [current nextObject]))
             {
@@ -379,17 +358,16 @@
                 return [current nextObject];
             }
             return nil;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
-
+                                    
 @dynamic distinct;
-- (NSEnumerator *(^)())distinct
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+- (NSEnumerator *(^)())distinct {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         __block NSMutableArray *returnedArray = [[NSMutableArray alloc]init];
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while((item = [src nextObject]) != nil && [returnedArray containsObject:item]){
                 NSLog(@"skip : %@",item);
@@ -401,17 +379,16 @@
                 return item;
             }
             return item;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic concat;
-- (NSEnumerator *(^)(NSEnumerator *))concat
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(NSEnumerator *dst) {
+- (NSEnumerator *(^)(NSEnumerator *))concat {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(NSEnumerator *dst) {
         __block BOOL isFirst = true;
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             if (isFirst)
             {
@@ -429,95 +406,87 @@
             {
                 return [dst nextObject];
             }
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic unions;
-- (NSEnumerator *(^)(NSEnumerator *))unions
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(NSEnumerator *dst) {
+- (NSEnumerator *(^)(NSEnumerator *))unions {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(NSEnumerator *dst) {
         return weakSelf.concat(dst).distinct();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic intersect;
-- (NSEnumerator *(^)(NSEnumerator *))intersect
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(NSEnumerator *dst) {
+- (NSEnumerator *(^)(NSEnumerator *))intersect {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(NSEnumerator *dst) {
         NSArray *dstArray = dst.toArray();
         return weakSelf.where(^BOOL(id item) {
             return [dstArray containsObject:item];
         });
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic except;
-- (NSEnumerator *(^)(NSEnumerator *))except
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(NSEnumerator *dst) {
+- (NSEnumerator *(^)(NSEnumerator *))except {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(NSEnumerator *dst) {
         NSArray *dstArray = dst.toArray();
         return weakSelf.where(^BOOL(id item) {
             return ![dstArray containsObject:item];
         });
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic buffer;
-- (NSEnumerator *(^)(int))buffer;
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(int count) {
-        return [[[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
+- (NSEnumerator *(^)(int))buffer {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(int count) {
+        return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             NSArray *result = src.take(count).toArray();
             return (result.count == 0) ? nil: result;
-        }]autorelease];
-    }copy]autorelease];
+        }]);
+    }copy]);
 }
 
 @dynamic toArray;
-- (NSArray*(^)())toArray
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+- (NSArray*(^)())toArray {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         return [weakSelf allObjects];
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic toMutableArray;
-- (NSMutableArray*(^)())toMutableArray
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
-        NSMutableArray *result = [[[NSMutableArray alloc]init]autorelease];
+- (NSMutableArray*(^)())toMutableArray {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
+        NSMutableArray *result = AH_AUTORELEASE([[NSMutableArray alloc]init]);
         for (id value in weakSelf) {
             [result addObject:value];
         }
         return result;
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic toDictionary;
-- (NSDictionary *(^)(id(^)(id)))toDictionary
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id(^keySelector)(id)) {
+- (NSDictionary *(^)(id(^)(id)))toDictionary {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id(^keySelector)(id)) {
         NSArray* objArray = weakSelf.toArray();
         NSArray* keyArray = objArray.getEnumerator()
         .select(^id(id item) { return keySelector(item); })
         .toArray();
-        return [[[NSDictionary alloc]initWithObjects:objArray forKeys:keyArray]autorelease];
-    }copy]autorelease];
+        return AH_AUTORELEASE([[NSDictionary alloc]initWithObjects:objArray forKeys:keyArray]);
+    }copy]);
 }
 
 @dynamic toDictionaryWithSelector;
-- (NSDictionary *(^)(id(^)(id), id(^)(id)))toDictionaryWithSelector
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id(^keySelector)(id), id(^elementSelector)(id)) {
+- (NSDictionary *(^)(id(^)(id), id(^)(id)))toDictionaryWithSelector {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id(^keySelector)(id), id(^elementSelector)(id)) {
         NSArray* objArray = weakSelf.toArray();
         NSArray* keyArray = objArray.getEnumerator()
         .select(^id(id item) { return keySelector(item); })
@@ -525,28 +494,26 @@
         NSArray* elementArray = objArray.getEnumerator()
         .select(^id(id item) { return elementSelector(item); })
         .toArray();
-        return [[[NSDictionary alloc]initWithObjects:elementArray forKeys:keyArray]autorelease];
-    }copy]autorelease];
+        return AH_AUTORELEASE([[NSDictionary alloc]initWithObjects:elementArray forKeys:keyArray]);
+    }copy]);
 }
 
 @dynamic toMutableDictionary;
-- (NSMutableDictionary *(^)(id(^)(id)))toMutableDictionary
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id(^keySelector)(id)) {
+- (NSMutableDictionary *(^)(id(^)(id)))toMutableDictionary {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id(^keySelector)(id)) {
         NSArray* objArray = weakSelf.toArray();
         NSArray* keyArray = objArray.getEnumerator()
         .select(^id(id item) { return keySelector(item); })
         .toArray();
-        return [[[NSMutableDictionary alloc]initWithObjects:objArray forKeys:keyArray]autorelease];
-    }copy]autorelease];
+        return AH_AUTORELEASE([[NSMutableDictionary alloc]initWithObjects:objArray forKeys:keyArray]);
+    }copy]);
 }
 
 @dynamic toMutableDictionaryWithSelector;
-- (NSMutableDictionary *(^)(id(^)(id), id(^)(id)))toMutableDictionaryWithSelector
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id(^keySelector)(id), id(^elementSelector)(id)) {
+- (NSMutableDictionary *(^)(id(^)(id), id(^)(id)))toMutableDictionaryWithSelector {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id(^keySelector)(id), id(^elementSelector)(id)) {
         NSArray* objArray = weakSelf.toArray();
         NSArray* keyArray = objArray.getEnumerator()
         .select(^id(id item) { return keySelector(item);})
@@ -554,42 +521,40 @@
         NSArray* elementArray = objArray.getEnumerator()
         .select(^id(id item) { return elementSelector(item); })
         .toArray();
-        return [[[NSMutableDictionary alloc]initWithObjects:elementArray forKeys:keyArray] autorelease];
-    }copy]autorelease];
+        return AH_AUTORELEASE([[NSMutableDictionary alloc]initWithObjects:elementArray forKeys:keyArray]);
+    }copy]);
 }
 
 @dynamic toData;
--(NSData *(^)())toData
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+-(NSData *(^)())toData {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         NSArray * array = [weakSelf allObjects];
-        NSMutableData *result = [[[NSMutableData alloc]initWithCapacity:[array count]] autorelease];
+        NSMutableData *result = AH_AUTORELEASE([[NSMutableData alloc]initWithCapacity:[array count]]);
         for (NSNumber * obj in array) {
             char charByte = [obj charValue];
             [result appendBytes:&charByte length:1];
         }
         return result;
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic toString;
--(NSString *(^)())toString
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
-        __block NSString *str = [[[NSString alloc]init]autorelease];
+-(NSString *(^)())toString {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
+        __block NSString *str = AH_AUTORELEASE([[NSString alloc]init]);
         weakSelf.forEach(^(id number) {
             unichar charShort = [(NSNumber*)number unsignedShortValue];
             [str stringByAppendingString:[NSString stringWithCharacters:&charShort length:1]];
         });
         return str;
-    }copy]autorelease];
+    }copy]);
 }
+
 @dynamic elementAt;
--(id (^)(int))elementAt
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+-(id (^)(int))elementAt {
+    __weak NSEnumerator *weakSelf = self;
     return [[^(int index) {
         id item = [weakSelf.toArray() objectAtIndex:index];
         if(item)
@@ -602,23 +567,21 @@
              raise];
             return (id)nil;
         }
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic elementOrNilAt;
--(id (^)(int))elementOrNilAt
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+-(id (^)(int))elementOrNilAt {
+    __weak NSEnumerator *weakSelf = self;
     return [[^(int index) {
         return [weakSelf.toArray() objectAtIndex:index];
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic single;
--(id (^)())single
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+-(id (^)())single {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         id item = [weakSelf nextObject];
         if(item && [weakSelf nextObject] == nil) {
             return item;
@@ -629,24 +592,22 @@
              raise];
             return (id)nil;
         }
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic singleWithPredicate;
--(id (^)(BOOL(^)(id)))singleWithPredicate
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(id (^)(BOOL(^)(id)))singleWithPredicate {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.where(_predicate).single();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic singleOrNil;
--(id (^)())singleOrNil
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+-(id (^)())singleOrNil {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         id item = [weakSelf nextObject];
         if([weakSelf nextObject] == nil) {
             return item;
@@ -655,25 +616,23 @@
                                      reason:@"Result returned -1.."
                                    userInfo:nil]
              raise];
-        return (id)nil;
+            return (id)nil;
         }
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic singleOrNilWithPredicate;
--(id (^)(BOOL(^)(id)))singleOrNilWithPredicate
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(id (^)(BOOL(^)(id)))singleOrNilWithPredicate {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.where(_predicate).singleOrNil();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic first;
--(id (^)())first
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+-(id (^)())first {
+    __weak NSEnumerator *weakSelf = self;
     return [[^() {
         id item = [weakSelf nextObject];
         if(item) {
@@ -685,43 +644,39 @@
              raise];
             return (id)nil;
         }
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic firstWithPredicate;
--(id (^)(BOOL(^)(id)))firstWithPredicate
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(id (^)(BOOL(^)(id)))firstWithPredicate {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.where(_predicate).first();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic firstOrNil;
--(id (^)())firstOrNil
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
+-(id (^)())firstOrNil {
+    __weak NSEnumerator *weakSelf = self;
     return [[^() {
         return [weakSelf nextObject];
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic firstOrNilWithPredicate;
--(id (^)(BOOL(^)(id)))firstOrNilWithPredicate
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(id (^)(BOOL(^)(id)))firstOrNilWithPredicate {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.where(_predicate).firstOrNil();
-    }copy]autorelease];    
+    }copy]);
 }
 
 @dynamic last;
--(id (^)())last
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+-(id (^)())last {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         id item = [weakSelf.toArray() lastObject];
         if(item) {
             return item;
@@ -732,53 +687,48 @@
              raise];
             return (id)nil;
         }
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic lastWithPredicate;
--(id (^)(BOOL(^)(id)))lastWithPredicate
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(id (^)(BOOL(^)(id)))lastWithPredicate {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.where(_predicate).last();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic lastOrNil;
--(id (^)())lastOrNil
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+-(id (^)())lastOrNil {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         return [weakSelf.toArray() lastObject];
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic lastOrNilWithPredicate;
--(id (^)(BOOL(^)(id)))lastOrNilWithPredicate
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(id (^)(BOOL(^)(id)))lastOrNilWithPredicate {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         return weakSelf.where(_predicate).lastOrNil();
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic count;
--(int (^)())count
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^() {
+-(int (^)())count {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^() {
         return weakSelf.toArray().count;
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic all;
--(BOOL (^)(BOOL(^)(id)))all
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(BOOL (^)(BOOL(^)(id)))all {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         id item;
         while ((item = [weakSelf nextObject]))
         {
@@ -786,15 +736,14 @@
                 return NO;
         }
         return YES;
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic any;
--(BOOL (^)(BOOL(^)(id)))any
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(BOOL(^predicate)(id)) {
-        BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(BOOL (^)(BOOL(^)(id)))any {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(BOOL(^predicate)(id)) {
+        BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
         id item;
         while ((item = [weakSelf nextObject]))
         {
@@ -802,14 +751,13 @@
                 return YES;
         }
         return NO;
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic contains;
--(BOOL (^)(id))contains
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(id item) {
+-(BOOL (^)(id))contains {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(id item) {
         id dst;
         while ((dst = [weakSelf nextObject]))
         {
@@ -817,27 +765,38 @@
                 return YES;
         }
         return NO;
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic sequenceEqual;
--(BOOL (^)(NSEnumerator *))sequenceEqual
-{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(NSEnumerator *dst) {
+-(BOOL (^)(NSEnumerator *))sequenceEqual {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(NSEnumerator *dst) {
         return [weakSelf.toArray() isEqualToArray:dst.toArray()];
-    }copy]autorelease];
+    }copy]);
 }
 
 @dynamic forEach;
-- (void (^)(void(^)(id)))forEach{
-    __unsafe_unretained NSEnumerator *weakSelf = self;
-    return [[^(void(^action)(id)) {
-        void (^_action)(id) = [[action copy]autorelease];
+- (void (^)(void(^)(id)))forEach {
+    __weak NSEnumerator *weakSelf = self;
+    return AH_AUTORELEASE([^(void(^action)(id)) {
+        void (^_action)(id) = AH_AUTORELEASE([action copy]);
         for (id value in weakSelf) {
             _action(value);
         }
-    }copy]autorelease];
+    }copy]);
+}
+
+@dynamic forEachWithIndex;
+- (void (^)(void(^)(id,int)))forEach {
+    __weak NSEnumerator *weakSelf = self;
+    __block int counter = 0;
+    return AH_AUTORELEASE([^(void(^action)(id,int)) {
+        void (^_action)(id) = AH_AUTORELEASE([action copy]);
+        for (id value in weakSelf) {
+            _action(value,counter++);
+        }
+    }copy]);
 }
 
 //従来のメソッドバージョン
@@ -846,16 +805,16 @@
 @implementation NSData (Query)
 
 -(NSEnumerator *)objectEnumerator {
-    __unsafe_unretained NSData *weakSelf = self;
+    __my_block_weak NSData *weakSelf = self;
     __block int counter = 0;
     
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         while (counter < [weakSelf length]) {
             
             return [NSNumber numberWithChar:(*((char *)([weakSelf bytes] + counter++)))];
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 @end
@@ -863,15 +822,15 @@
 @implementation NSString (Query)
 
 -(NSEnumerator *)objectEnumerator {
-    __unsafe_unretained NSString *weakSelf = self;
+    __my_block_weak NSString *weakSelf = self;
     __block int counter = 0;
     
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         while (counter < [weakSelf length]) {
             return [NSNumber numberWithUnsignedShort:[weakSelf characterAtIndex:counter++]];
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 @end
@@ -880,127 +839,114 @@
 
 +(NSEnumerator *)range:(int)start to:(int)count {
     __block int counter = start;
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         while (counter < (start + count)) {
             return [NSNumber numberWithInt:counter++];
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 
 +(NSEnumerator *)repeat:(id)item count:(int)count {
     __block int counter = 0;
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         while (counter < count) {
             counter++;
             return item;
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 +(NSEnumerator *)empty {
-    return [[[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:nil nextObjectBlock:^id(NSEnumerator * src) {
         return nil;
-    }] autorelease];
+    }]);
 }
 
-- (NSEnumerator *) ofClass: (Class) classType
-{
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+- (NSEnumerator *)ofClass:(Class)classType {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
         do {
             item = [src nextObject];
         } while (item != nil && ![item isKindOfClass:classType]);
-        
         return item;
-    }] autorelease];
+    }]);
 }
 
 
--(NSEnumerator *) select: (id(^)(id)) selector
-{
-    id (^_selector)(id) = [[selector copy]autorelease];
+-(NSEnumerator *)select:(id(^)(id))selector {
+    id (^_selector)(id) = AH_AUTORELEASE([selector copy]);
     return [self selectWithIndex:^id(id item, int index) {
         return _selector(item);
-    }] ;
+    }];
 }
 
 
--(NSEnumerator *) selectWithIndex: (id(^)(id,int)) selector
-{
+-(NSEnumerator *)selectWithIndex:(id(^)(id,int))selector {
     __block int counter = 0;
-    id (^_selector)(id,int) = [[selector copy]autorelease];
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    id (^_selector)(id,int) = AH_AUTORELEASE([selector copy]);
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        while ((item = [src nextObject]))
-        {
+        while ((item = [src nextObject])) {
             return _selector(item,counter++);
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 
--(NSEnumerator *) where: (BOOL(^)(id)) predicate
-{
-    BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(NSEnumerator *)where:(BOOL(^)(id))predicate {
+    BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
     return [self whereWithIndex:^BOOL(id item, int index) {
         return _predicate(item);
     }];
 }
 
 
--(NSEnumerator *) whereWithIndex: (BOOL(^)(id,int)) predicate
-{
+-(NSEnumerator *)whereWithIndex:(BOOL(^)(id,int))predicate {
     __block int counter = 0;
-    BOOL (^_predicate)(id,int) = [[predicate copy]autorelease];
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    BOOL (^_predicate)(id,int) = AH_AUTORELEASE([predicate copy]);
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        while ((item = [src nextObject]))
-        {
+        while ((item = [src nextObject])) {
             if(_predicate(item,counter++))
                 return item;
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 
--(NSEnumerator *) skip: (int)count
-{
+-(NSEnumerator *)skip:(int)count {
     __block int counter = 0;
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        while (counter++ < count)
-        {
+        while (counter++ < count) {
             if(!(item = [src nextObject]))
                 return nil;
         }
         return [src nextObject];
-    }] autorelease];
+    }]);
 }
 
 
--(NSEnumerator *) skipWhile: (BOOL(^)(id item)) predicate
-{
-    BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(NSEnumerator *)skipWhile:(BOOL(^)(id item))predicate {
+    BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
     return [self skipWhileWithIndex:^BOOL(id item, int index) {
         return _predicate(item);
     }];
 }
 
 
--(NSEnumerator *) skipWhileWithIndex: (BOOL(^)(id,int)) predicate
-{
+-(NSEnumerator *)skipWhileWithIndex:(BOOL(^)(id,int))predicate {
     __block int counter = 0;
     __block BOOL skipped = NO;
-    BOOL (^_predicate)(id,int) = [[predicate copy]autorelease];
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    BOOL (^_predicate)(id,int) = AH_AUTORELEASE([predicate copy]);
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        if (!skipped)
-        {
+        if (!skipped) {
             do {
                 if(!(item = [src nextObject]))
                     return nil;
@@ -1009,59 +955,52 @@
             return item;
         }
         return [src nextObject];
-    }] autorelease];
+    }]);
 }
 
 
--(NSEnumerator *) take: (int)count
-{
+-(NSEnumerator *)take:(int)count {
     __block int counter = 0;
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        if (counter++ < count && (item = [src nextObject]))
-        {
+        if (counter++ < count && (item = [src nextObject])) {
             return item;
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
 
--(NSEnumerator *) takeWhile: (BOOL(^)(id item)) predicate
-{
-    BOOL (^_predicate)(id) = [[predicate copy]autorelease];
+-(NSEnumerator *)takeWhile:(BOOL(^)(id item))predicate {
+    BOOL (^_predicate)(id) = AH_AUTORELEASE([predicate copy]);
     return [self takeWhileWithIndex:^BOOL(id item, int index) {
         return _predicate(item);
     }];
 }
 
 
--(NSEnumerator *) takeWhileWithIndex: (BOOL(^)(id,int)) predicate
-{
+-(NSEnumerator *)takeWhileWithIndex:(BOOL(^)(id,int))predicate {
     __block int counter = 0;
     __block BOOL taking = YES;
-    BOOL (^_predicate)(id,int) = [[predicate copy]autorelease];
-    return [[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    BOOL (^_predicate)(id,int) = AH_AUTORELEASE([predicate copy]);
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        if (taking && (item = [src nextObject]))
-        {
-            while ((taking = _predicate(item,counter++)))
-            {
+        if (taking && (item = [src nextObject])) {
+            while ((taking = _predicate(item,counter++))) {
                 return item;
             }
         }
         return nil;
-    }];
+    }]);
 }
 
--(NSEnumerator *) scan: (id(^)(id,id)) func {
-    id (^_func)(id,id) = [[func copy]autorelease];
+-(NSEnumerator *)scan:(id(^)(id,id))func {
+    id (^_func)(id,id) = AH_AUTORELEASE([func copy]);
     __block BOOL first = YES;
     __block id result;
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        while ((item = [src nextObject]))
-        {
+        while ((item = [src nextObject])) {
             if (first) {
                 result = item;
                 first = NO;
@@ -1071,17 +1010,15 @@
             return result;
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
--(NSEnumerator *)orderByDescription:(NSSortDescriptor *)firstObj, ... NS_REQUIRES_NIL_TERMINATION
-{
+-(NSEnumerator *)orderByDescription:(NSSortDescriptor *)firstObj, ... {
     va_list list;
     va_start(list, firstObj);
-    NSMutableArray *array = [[[NSMutableArray alloc]initWithObjects:firstObj, nil] autorelease];
+    NSMutableArray *array = [[NSMutableArray alloc]initWithObjects:firstObj, nil];
     NSSortDescriptor *desc;
-    while((desc = va_arg(list, NSSortDescriptor*)))
-    {
+    while((desc = va_arg(list, NSSortDescriptor*))) {
         [array addObject:desc];
     }
     va_end(list);
@@ -1090,118 +1027,102 @@
 }
 
 
-- (NSEnumerator *) selectMany: (id(^)(id)) selector
-{
-    id (^_selector)(id) = [[selector copy]autorelease];
+-(NSEnumerator *)selectMany:(id(^)(id))selector {
+    id (^_selector)(id) = AH_AUTORELEASE([selector copy]);
     __block id current = [self nextObject];
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        while ((item = [current nextObject]))
-        {
+        while ((item = [current nextObject])) {
             return _selector(item);
         }
-        if((current = [src nextObject]))
-        {
+        if((current = [src nextObject])) {
             return [current nextObject];
         }
         return nil;
-    }] autorelease];
+    }]);
 }
 
-- (NSEnumerator *) distinct{
-    
+-(NSEnumerator *)distinct{    
     __block NSMutableArray *returnedArray = [[NSMutableArray alloc]init];
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
         while((item = [src nextObject]) != nil && [returnedArray containsObject:item]){
             NSLog(@"skip : %@",item);
         }
-        if(item)
-        {
+        if(item) {
             NSLog(@"return %@",item);
             [returnedArray addObject:item];
             return item;
         }
         return item;
-    }] autorelease];
+    }]);
 }
 
-- (NSEnumerator *) concat:(NSEnumerator *)dst
-{
+-(NSEnumerator *)concat:(NSEnumerator *)dst {
     NSEnumerator *_dst = dst;
     __block BOOL isFirst = true;
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
-        if (isFirst)
-        {
-            if((item = [src nextObject]))
-            {
+        if (isFirst) {
+            if((item = [src nextObject])) {
                 return item;
-            }
-            else
-            {
+            } else {
                 isFirst = false;
                 return [_dst nextObject];
             }
-        }
-        else
-        {
+        } else {
             return [_dst nextObject];
         }
-    }] autorelease];
+    }]);
 }
 
 
-- (NSEnumerator *) unions:(NSEnumerator *)dst{
+-(NSEnumerator *)unions:(NSEnumerator *)dst{
     return [[self concat:dst]distinct];
 }
 
-- (NSEnumerator *) intersect:(NSEnumerator *)dst{
+-(NSEnumerator *)intersect:(NSEnumerator *)dst{
     NSArray *dstArray = [dst toArray];
     return [self where:^BOOL(id item) {
         return [dstArray containsObject:item];
     }];
 }
 
-- (NSEnumerator *) except:(NSEnumerator *)dst{
+-(NSEnumerator *)except:(NSEnumerator *)dst{
     NSArray *dstArray = [dst toArray];
     return [self where:^BOOL(id item) {
         return ![dstArray containsObject:item];
     }];
 }
 
-- (NSEnumerator *) buffer:(int)count;
-{
-    return [[[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
+-(NSEnumerator *)buffer:(int)count; {
+    return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         NSArray *result = [[src take:count]toArray];
         return (result.count == 0) ? nil: result;
-    }] autorelease];
+    }]);
 }
 
-- (NSArray*) toArray
-{
+-(NSArray*) toArray {
     return [self allObjects];
 }
 
-- (NSMutableArray*) toMutableArray
-{
-    NSMutableArray *result = [[[NSMutableArray alloc]init] autorelease];
+-(NSMutableArray*) toMutableArray {
+    NSMutableArray *result = AH_AUTORELEASE([[NSMutableArray alloc]init]);
     for (id value in self) {
         [result addObject:value];
     }
     return result;
 }
 
-- (NSDictionary *) toDictionary: (id(^)(id)) keySelector{
-    
+-(NSDictionary *)toDictionary:(id(^)(id))keySelector {
     NSArray* objArray = [self toArray];
     NSArray* keyArray = [[[objArray objectEnumerator] select:^id(id item) {
         return keySelector(item);
     }]toArray];
-    return [[[NSDictionary alloc]initWithObjects:objArray forKeys:keyArray] autorelease];
+    return AH_AUTORELEASE([[NSDictionary alloc]initWithObjects:objArray forKeys:keyArray]);
 }
 
-- (NSDictionary *) toDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector{
+-(NSDictionary *)toDictionary:(id(^)(id))keySelector elementSelector:(id(^)(id))elementSelector{
     NSArray* objArray = [self toArray];
     NSArray* keyArray = [[[objArray objectEnumerator]select:^id(id item) {
         return keySelector(item);
@@ -1209,19 +1130,18 @@
     NSArray* elementArray = [[[objArray objectEnumerator] select:^id(id item) {
         return elementSelector(item);
     }]toArray];
-    return [[[NSDictionary alloc]initWithObjects:elementArray forKeys:keyArray] autorelease];
+    return AH_AUTORELEASE([[NSDictionary alloc]initWithObjects:elementArray forKeys:keyArray]);
 }
 
-- (NSMutableDictionary *) toMutableDictionary: (id(^)(id)) keySelector{
-    
+-(NSMutableDictionary *)toMutableDictionary:(id(^)(id))keySelector {
     NSArray* objArray = [self toArray];
     NSArray* keyArray = [[[objArray objectEnumerator] select:^id(id item) {
         return keySelector(item);
     }]toArray];
-    return [[[NSMutableDictionary alloc]initWithObjects:objArray forKeys:keyArray] autorelease];
+    return AH_AUTORELEASE([[NSMutableDictionary alloc]initWithObjects:objArray forKeys:keyArray]);
 }
 
-- (NSMutableDictionary *) toMutableDictionary: (id(^)(id)) keySelector elementSelector:(id(^)(id)) elementSelector{
+-(NSMutableDictionary *)toMutableDictionary:(id(^)(id))keySelector elementSelector:(id(^)(id))elementSelector {
     NSArray* objArray = [self toArray];
     NSArray* keyArray = [[[objArray objectEnumerator]select:^id(id item) {
         return keySelector(item);
@@ -1229,12 +1149,12 @@
     NSArray* elementArray = [[[objArray objectEnumerator] select:^id(id item) {
         return elementSelector(item);
     }]toArray];
-    return [[[NSMutableDictionary alloc]initWithObjects:elementArray forKeys:keyArray] autorelease];
+    return AH_AUTORELEASE([[NSMutableDictionary alloc]initWithObjects:elementArray forKeys:keyArray]);
 }
 
--(NSData *) toData {
+-(NSData *)toData {
     NSArray * array = [self allObjects];
-    NSMutableData *result = [[[NSMutableData alloc]initWithCapacity:[array count]] autorelease];
+    NSMutableData *result = AH_AUTORELEASE([[NSMutableData alloc]initWithCapacity:[array count]]);
     for (NSNumber * obj in array) {
         char charByte = [obj charValue];
         [result appendBytes:&charByte length:1];
@@ -1242,8 +1162,8 @@
     return result;
 }
 
--(NSString *) toString {
-    __block NSString *str = [[[NSString alloc]init] autorelease];
+-(NSString *)toString {
+    __block NSString *str = AH_AUTORELEASE([[NSString alloc]init]);
     [self forEach:^(id number) {
         unichar charShort = [(NSNumber*)number unsignedShortValue];
         [str stringByAppendingString:[NSString stringWithCharacters:&charShort length:1]];
@@ -1251,8 +1171,7 @@
     return str;
 }
 
--(id) elementAt:(int)index
-{
+-(id)elementAt:(int)index {
     id item = [[self toArray]objectAtIndex:index];
     if(item)
         return item;
@@ -1265,13 +1184,11 @@
 }
 
 
--(id) elementOrNilAt:(int)index
-{
+-(id)elementOrNilAt:(int)index {
     return [[self toArray]objectAtIndex:index];
 }
 
--(id) single
-{
+-(id)single {
     id item = [self nextObject];
     if(item && [self nextObject] == nil)
         return item;
@@ -1283,30 +1200,28 @@
     return nil;
 }
 
--(id) single:(BOOL(^)(id)) predicate
-{
+-(id)single:(BOOL(^)(id))predicate {
     return [[self where:predicate]single];
 }
 
--(id) singleOrNil
-{
+-(id)singleOrNil {
     id item = [self nextObject];
-    if([self nextObject] == nil)
-        return item;
-    else
-        [[NSException exceptionWithName:NSInvalidArgumentException
-                                 reason:@"Result returned -1.."
-                               userInfo:nil]
-         raise];
+    if (item) {
+        if([self nextObject] == nil)
+            return item;
+        else
+            [[NSException exceptionWithName:NSInvalidArgumentException
+                                     reason:@"Result returned -1.."
+                                   userInfo:nil]
+             raise];
+    }
     return nil;
 }
--(id) singleOrNil:(BOOL(^)(id)) predicate
-{
+-(id)singleOrNil:(BOOL(^)(id))predicate {
     return [[self where:predicate]singleOrNil];
 }
 
--(id) first
-{
+-(id)first {
     id item = [self nextObject];
     if(item)
         return item;
@@ -1318,25 +1233,21 @@
     return nil;
 }
 
--(id) first:(BOOL(^)(id)) predicate
-{
+-(id)first:(BOOL(^)(id))predicate {
     return [[self where:predicate]first];
 }
 
 
--(id) firstOrNil
-{
+-(id)firstOrNil {
     return [self nextObject];
 }
 
--(id) firstOrNil:(BOOL(^)(id)) predicate
-{
+-(id)firstOrNil:(BOOL(^)(id))predicate {
     return [[self where:predicate]firstOrNil];
 }
 
 
--(id) last
-{
+-(id)last {
     id item = [[self toArray]lastObject];
     if(item)
         return item;
@@ -1348,34 +1259,28 @@
     return nil;
 }
 
--(id) last:(BOOL(^)(id)) predicate
-{
+-(id)last:(BOOL(^)(id))predicate {
     return [[self where:predicate]last];
 }
 
 
--(id) lastOrNil
-{
+-(id)lastOrNil {
     return [[self toArray]lastObject];
 }
 
--(id) lastOrNil:(BOOL(^)(id)) predicate
-{
+-(id)lastOrNil:(BOOL(^)(id))predicate {
     return [[self where:predicate]lastOrNil];
 }
 
 
--(int) count
-{
+-(int)count {
     return [self toArray].count;
 }
 
 
--(BOOL) all: (BOOL(^)(id)) predicate
-{
+-(BOOL)all:(BOOL(^)(id))predicate {
     id item;
-    while ((item = [self nextObject]))
-    {
+    while ((item = [self nextObject])) {
         if(!predicate(item))
             return NO;
     }
@@ -1383,11 +1288,9 @@
 }
 
 
--(BOOL) any: (BOOL(^)(id)) predicate
-{
+-(BOOL)any:(BOOL(^)(id))predicate {
     id item;
-    while ((item = [self nextObject]))
-    {
+    while ((item = [self nextObject])) {
         if(predicate(item))
             return YES;
     }
@@ -1395,11 +1298,9 @@
 }
 
 
--(BOOL) contains : (id) item
-{
+-(BOOL)contains:(id)item {
     id dst;
-    while ((dst = [self nextObject]))
-    {
+    while ((dst = [self nextObject])) {
         if([dst isEqual:(item)])
             return YES;
     }
@@ -1407,21 +1308,25 @@
 }
 
 
--(BOOL) sequenceEqual: (NSEnumerator *)dst
-{
+-(BOOL)sequenceEqual:(NSEnumerator *)dst {
     NSArray *srcArray = [self toArray];
     NSArray *dstArray = [dst toArray];
     return [srcArray isEqualToArray:dstArray];
 }
 
 
-- (void) forEach: (void(^)(id)) action
-{
+-(void)forEach:(void(^)(id))action {
     for (id value in self) {
         action(value);
     }
 }
 
+-(void)forEachWithIndex:(void(^)(id,int))action {
+    int counter = 0;
+    for (id value in self) {
+        action(value, counter++);
+    }
+}
 #endif
 
 @end
