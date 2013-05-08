@@ -143,7 +143,7 @@ typedef enum {
 @interface LQXAttribute : LQXObject
 
 /*! 属性の名称 */
-@property (nonatomic,readonly) NSString *name;
+@property (nonatomic,readonly) LQXName *name;
 /*! 値 */
 @property (nonatomic,copy) NSString *value;
 
@@ -362,11 +362,15 @@ typedef enum {
 @interface LQXElement : LQXContainer
 
 /*! 要素名称 */
-@property (nonatomic,readonly) NSString *name;
+@property (nonatomic,readonly) LQXName *name;
 /*! 値 */
 @property (nonatomic,copy) NSString *value;
 /*! 最初の属性値 */
 @property(nonatomic,readonly) LQXAttribute* firstAttribute;
+/*! 子ノードがあるか */
+@property(nonatomic,readonly) BOOL isEmpty;
+/*! valueがあるか */
+@property(nonatomic,readonly) BOOL hasValue;
 /*! 属性があるか */
 @property(nonatomic,readonly) BOOL hasAttributes;
 /*! 子要素があるか */
@@ -431,7 +435,7 @@ typedef enum {
  @discussion    xmlドキュメントからDOMを構築する
  @param         filename ファイル名
  */
-+(LQXElement*)load:(NSString*)filename;
++(LQXElement*)load:(NSString*)path;
 
 /*!
  @abstract      LQXElementを取得する
@@ -600,9 +604,10 @@ typedef enum {
 /*!
  @abstract      xmlドキュメントを読み込む
  @discussion    xmlドキュメントからDOMを構築する
- @param         filename ファイル名
+ @param         path 読み込みもと
  */
-+(LQXDocument*)load:(NSString*)filename;
++(LQXDocument*)load:(NSString*)path;
+
 
 -(LQXDocument*)init;
 /*!

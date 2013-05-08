@@ -391,9 +391,10 @@
                               [LQXElement element:@"Child5" value:@"5"],nil];
     NSLog(@"%@",element);
     
-    document = [LQXDocument load:@"hoken_dsaisyu_tokutei"];
+    NSString *path = [[NSBundle mainBundle]pathForResource:@"hoken_dsaisyu_tokutei" ofType:@"xml"];
+    document = [LQXDocument load:path];
     NSLog(@"%@",document);
-    element = [LQXElement load:@"hoken_dsaisyu_tokutei"];
+    element = [LQXElement load:@"http://feeds.feedburner.com/hatena/b/hotentry.rss"];
     NSLog(@"%@",element);
 }
 @end

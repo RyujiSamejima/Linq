@@ -370,11 +370,9 @@
         return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:weakSelf nextObjectBlock:^id(NSEnumerator *src) {
             id item;
             while((item = [src nextObject]) != nil && [returnedArray containsObject:item]){
-                NSLog(@"skip : %@",item);
             }
             if(item)
             {
-                NSLog(@"return %@",item);
                 [returnedArray addObject:item];
                 return item;
             }
@@ -1047,10 +1045,8 @@
     return AH_AUTORELEASE([[CustomEnumerator alloc]initWithFunction:self nextObjectBlock:^id(NSEnumerator *src) {
         id item;
         while((item = [src nextObject]) != nil && [returnedArray containsObject:item]){
-            NSLog(@"skip : %@",item);
         }
         if(item) {
-            NSLog(@"return %@",item);
             [returnedArray addObject:item];
             return item;
         }

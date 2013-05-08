@@ -13,6 +13,11 @@
     #import <Foundation/Foundation.h>
 #endif
 
+#ifdef DEBUG
+# define TRACE(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+# define TRACE(...)
+#endif
 
 // ARC & memory management
 // Use these prefixes to be compatible with ARC on iOS 5/ ARC on iOS 4.X / non-ARC
