@@ -40,6 +40,7 @@
 		A37D019E1657668800DB0B34 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A37D019C1657668800DB0B34 /* InfoPlist.strings */; };
 		A37D01A11657668800DB0B34 /* LinqTestAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01A01657668800DB0B34 /* LinqTestAppTests.m */; };
 		A37D01B01657670C00DB0B34 /* NSEnumerator+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */; };
+		A37EAA621739D9B200D3FCFA /* hoken_dsaisyu_tokutei.xml in Resources */ = {isa = PBXBuildFile; fileRef = A37EAA611739D9B200D3FCFA /* hoken_dsaisyu_tokutei.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		A37D01A01657668800DB0B34 /* LinqTestAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LinqTestAppTests.m; sourceTree = "<group>"; };
 		A37D01AE1657670C00DB0B34 /* NSEnumerator+Query.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEnumerator+Query.h"; sourceTree = SOURCE_ROOT; };
 		A37D01AF1657670C00DB0B34 /* NSEnumerator+Query.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEnumerator+Query.m"; sourceTree = SOURCE_ROOT; };
+		A37EAA611739D9B200D3FCFA /* hoken_dsaisyu_tokutei.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = hoken_dsaisyu_tokutei.xml; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 		A37D01751657668800DB0B34 /* LinqTestApp */ = {
 			isa = PBXGroup;
 			children = (
+				A37EAA611739D9B200D3FCFA /* hoken_dsaisyu_tokutei.xml */,
 				A34517171731E92F008826BB /* LQXDocument.h */,
 				A34517181731E92F008826BB /* LQXDocument.m */,
 				A37D01AE1657670C00DB0B34 /* NSEnumerator+Query.h */,
@@ -313,6 +316,7 @@
 				A37D01891657668800DB0B34 /* MainStoryboard.storyboard in Resources */,
 				A33C6EE0165D11B2000B1284 /* README.md in Resources */,
 				A345171F17390627008826BB /* LinqToXml.md in Resources */,
+				A37EAA621739D9B200D3FCFA /* hoken_dsaisyu_tokutei.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

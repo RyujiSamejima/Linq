@@ -31,6 +31,9 @@
 @end
 
 @interface LQXNode()
+@end
+
+@interface LQXComment()
 
 @end
 
@@ -242,6 +245,45 @@
 
 @end
 
+#pragma mark LQXComment
+
+@implementation LQXComment {
+    id _value;
+}
+
+@dynamic nodeType;
+-(XmlNodeType)nodeType {
+    return XmlNodeTypeComment;
+}
+
++(LQXComment*)comment:(NSString*)value {
+    return [[LQXComment alloc]init:value];
+}
+
++(LQXComment*)commentWithComment:(LQXComment*)comment {
+    return [[LQXComment alloc]initWithComment:comment];
+}
+
+-(LQXComment*)init:(NSString*)value {
+    if ((self = [super init])) {
+        _value = value;
+    }
+    return self;
+}
+
+-(LQXComment*)initWithComment:(LQXComment*)comment {
+    if ((self = [super init])) {
+        _value = comment.value;
+    }
+    return self;
+}
+
+-(NSString *)description {
+    return [NSString stringWithFormat:@"<!--%@-->\n",self.value];
+}
+
+@end
+
 #pragma mark LQXContainer
 
 @class LQXElement;
@@ -447,13 +489,16 @@
     
     switch (xmlTextReaderNodeType(reader)) {
         case XML_READER_TYPE_ELEMENT:
+            NSLog(@"XML_READER_TYPE_ELEMENT [%s]",name);
             if (target == nil) {
                 target = [LQXElement element:[NSString stringWithCString:(const char*)name encoding:NSUTF8StringEncoding]];
             } else {
                 LQXElement *newTarget = [LQXElement element:[NSString stringWithCString:(const char*)name encoding:NSUTF8StringEncoding]];
                 [target add:newTarget, nil];
                 target = newTarget;
+
             }
+            BOOL isEmpty = (1 == xmlTextReaderIsEmptyElement(reader));
             if (1 == xmlTextReaderHasAttributes(reader)) {
                 ret = xmlTextReaderMoveToFirstAttribute(reader);
                 while(1 == ret) {
@@ -465,33 +510,72 @@
                     ret = xmlTextReaderMoveToNextAttribute(reader);
                 }
             }
+            if (isEmpty) {
+                target = target.parent;
+            }
             break;
         case XML_READER_TYPE_TEXT:
+            NSLog(@"XML_READER_TYPE_TEXT [%s]",name);
             if (1 == xmlTextReaderHasValue(reader)) {
                 value = xmlTextReaderConstValue(reader);
                 target.value = [NSString stringWithCString:(const char*)value encoding:NSUTF8StringEncoding];
             }
             break;
-        case XML_READER_TYPE_COMMENT:
-            break;
+        case XML_READER_TYPE_COMMENT: {
+            NSLog(@"XML_READER_TYPE_COMMENT [%s]",name);
+            if (1 == xmlTextReaderHasValue(reader)) {
+                value = xmlTextReaderConstValue(reader);
+                target.value = [NSString stringWithCString:(const char*)value encoding:NSUTF8StringEncoding];
+                LQXComment *newTarget = [LQXComment comment:[NSString stringWithCString:(const char*)value encoding:NSUTF8StringEncoding]];
+                [target add:newTarget, nil];
+            }
+        } break;
         case XML_READER_TYPE_END_ELEMENT:
-            target = target.parent;
+            NSLog(@"XML_READER_TYPE_END_ELEMENT [%s]",name);
+            //親が無い＝ルート要素なのでチェックする
+            if (target.parent != nil) {
+                target = target.parent;
+            }
             break;
         case XML_READER_TYPE_XML_DECLARATION:
+            NSLog(@"XML_READER_TYPE_XML_DECLARATION [%s]",name);
             break;
-            
         case XML_READER_TYPE_DOCUMENT:
+            NSLog(@"XML_READER_TYPE_DOCUMENT [%s]",name);
+            break;
         case XML_READER_TYPE_ATTRIBUTE:
+            NSLog(@"XML_READER_TYPE_ATTRIBUTE [%s]",name);
+            break;
         case XML_READER_TYPE_CDATA:
+            NSLog(@"XML_READER_TYPE_CDATA [%s]",name);
+            break;
         case XML_READER_TYPE_ENTITY_REFERENCE:
+            NSLog(@"XML_READER_TYPE_ENTITY_REFERENCE [%s]",name);
+            break;
         case XML_READER_TYPE_ENTITY:
+            NSLog(@"XML_READER_TYPE_ENTITY [%s]",name);
+            break;
         case XML_READER_TYPE_PROCESSING_INSTRUCTION:
+            NSLog(@"XML_READER_TYPE_PROCESSING_INSTRUCTION [%s]",name);
+            break;
         case XML_READER_TYPE_DOCUMENT_TYPE:
+            NSLog(@"XML_READER_TYPE_DOCUMENT_TYPE [%s]",name);
+            break;
         case XML_READER_TYPE_DOCUMENT_FRAGMENT:
+            NSLog(@"XML_READER_TYPE_DOCUMENT_FRAGMENT [%s]",name);
+            break;
         case XML_READER_TYPE_NOTATION:
+            NSLog(@"XML_READER_TYPE_NOTATION [%s]",name);
+            break;
         case XML_READER_TYPE_WHITESPACE:
+            NSLog(@"XML_READER_TYPE_WHITESPACE [%s]",name);
+            break;
         case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+            NSLog(@"XML_READER_TYPE_SIGNIFICANT_WHITESPACE [%s]",name);
+            break;
         case XML_READER_TYPE_END_ENTITY:
+            NSLog(@"XML_READER_TYPE_END_ENTITY [%s]",name);
+            break;
         default:
             break;
     }
@@ -586,6 +670,7 @@
             case XmlNodeTypeAttribute:
                 [self.attributeArray addObject:xObject];
                 break;
+            case XmlNodeTypeComment:
             case XmlNodeTypeElement:
                 [self.nodeArray addObject:xObject];
                 break;
@@ -683,6 +768,7 @@
 }
 
 -(NSString *)description {
+    static NSInteger depth;
     NSMutableString *result;
     NSString *name;
     if (self.parent == nil || [self.xName.nameSpaceName isEqualToString:@""] || [self.xName.nameSpaceName isEqualToString:self.parent.xName.nameSpaceName]) {
@@ -690,18 +776,28 @@
     } else {
         name = [NSString stringWithFormat:@"%@:%@",self.xName.nameSpaceName,self.xName.localName];
     }
-    result = [NSMutableString stringWithFormat:@"<%@",name];
+    NSMutableString *space = [NSMutableString stringWithString:@""];
+    [[NSEnumerator repeat:@"  " count:depth]forEach:^(id item) {
+        [space appendString:item];
+    }];
+    result = [NSMutableString stringWithFormat:@"%@<%@",space,name];
     if (self.hasAttributes) {
         for (LQXAttribute *attr in self.attributes) {
             [result appendString:[attr description]];
         }
     }
-    if (self.hasElements) {
+    if (self.nodeArray.count != 0) {
         [result appendString:@">\n"];
-        for (LQXElement *elem in self.nodeArray) {
-            [result appendString:[elem description]];
+        for (id elem in self.nodeArray) {
+            depth++;
+            if ([elem isKindOfClass:[LQXElement class]]) {
+                [result appendString:[elem description]];
+            } else {
+                [result appendFormat:@"  %@%@",space,[elem description]];
+            }
+            depth--;
         }
-        [result appendFormat:@"</%@>\n", self.xName.localName];
+        [result appendFormat:@"%@</%@>\n",space, self.xName.localName];
     } else if (self.value != nil) {
         [result appendFormat:@">%@</%@>\n",self.value, self.xName.localName];
     } else {

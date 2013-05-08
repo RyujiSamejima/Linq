@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="urn:hl7-org:v3 ../XSD/hg08_V08.xsd">
+  <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+  <id nullFlavor="NI"/>
+  <!-- 報告区分 -->
+  <code code="22" codeSystem="1.2.392.200119.6.1001"/>
+  <!-- ファイル作成日 -->
+  <effectiveTime value="20140115"/>
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
+  <!-- 利用者情報 -->
+  <recordTarget>
+    <patientRole>
+      <!-- 保険者番号 -->
+      <id extension="06132013" root="1.2.392.200119.6.101"/>
+      <!-- 被保険者証等記号 -->
+      <id extension="１３１" root="1.2.392.200119.6.204"/>
+      <!-- 被保険者証等番号 -->
+      <id extension="123123123" root="1.2.392.200119.6.205"/>
+      <!-- 郵便番号 -->
+      <addr>
+        <postalCode>105-1008</postalCode>
+      </addr>
+      <patient>
+        <!-- 氏名 -->
+        <name>キキンタロウ</name>
+        <!-- 男女区分 -->
+        <administrativeGenderCode code="1" codeSystem="1.2.392.200119.6.1104"/>
+        <!-- 生年月日 -->
+        <birthTime value="19460516"/>
+      </patient>
+    </patientRole>
+  </recordTarget>
+  <!-- 特定保健指導情報ファイル作成機関情報 -->
+  <author>
+    <!-- ファイル作成日 -->
+    <time value="20140115"/>
+    <assignedAuthor>
+      <id nullFlavor="NI"/>
+      <representedOrganization>
+        <!-- 特定保健指導機関番号 -->
+        <id extension="1310100024" root="1.2.392.200119.6.102"/>
+        <!-- 名称 -->
+        <name>新橋第一診療所</name>
+        <!-- 電話番号 -->
+        <telecom value="tel:0335917441"/>
+        <!-- 所在地と郵便番号 -->
+        <addr>東京都港区新橋２－１－３<postalCode>105-0001</postalCode></addr>
+      </representedOrganization>
+    </assignedAuthor>
+  </author>
+  <custodian>
+    <assignedCustodian>
+      <representedCustodianOrganization>
+        <id nullFlavor="NI"/>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+  <!-- 受診券情報 -->
+  <participant typeCode="HLD">
+    <!-- 券面種別 -->
+    <functionCode code="1" codeSystem="1.2.392.200119.6.208"/>
+    <associatedEntity classCode="IDENT">
+      <!-- 特定健診受診券整理番号 -->
+      <id extension="13100000005" root="1.2.392.200119.6.209.106132013"/>
+      <scopingOrganization>
+        <!-- 特定健診受診券発行保険者番号 -->
+        <id extension="06132013" root="1.2.392.200119.6.101"/>
+      </scopingOrganization>
+    </associatedEntity>
+  </participant>
+  <!-- 利用券情報 -->
+  <participant typeCode="HLD">
+    <!-- 券面種別 -->
+    <functionCode code="2" codeSystem="1.2.392.200119.6.208"/>
+    <time>
+    <!-- 利用券有効期限 -->
+      <high value="20140331"/>
+    </time>
+    <associatedEntity classCode="IDENT">
+      <!-- 利用券整理番号 -->
+      <id extension="13300000005" root="1.2.392.200119.6.210.106132013"/>
+      <scopingOrganization>
+        <!-- 利用券発行保険者番号 -->
+        <id extension="06132013" root="1.2.392.200119.6.101"/>
+      </scopingOrganization>
+    </associatedEntity>
+  </participant>
+  <!-- 保健指導実施情報 -->
+  <documentationOf>
+    <serviceEvent>
+      <!-- 保健指導実施時のプログラム種別 -->
+      <code code="100" codeSystem="1.2.392.200119.6.1002" displayName="特定保健指導"/>
+      <!-- 保健指導実施年月日 -->
+      <effectiveTime value="20140110"/>
+      <performer typeCode="PRF">
+        <assignedEntity>
+          <id nullFlavor="NI"/>
+          <representedOrganization>
+            <!-- 保健指導実施機関番号 -->
+            <id extension="1310100024" root="1.2.392.200119.6.102"/>
+            <!-- 保健指導実施機関名称 -->
+            <name>新橋第一診療所</name>
+            <!-- 保健指導実施機関電話番号 -->
+            <telecom value="tel:0335917441"/>
+            <!-- 保健指導実施機関所在地と郵便番号 -->
+            <addr>東京都港区新橋２－１－３<postalCode>105-0001</postalCode></addr>
+          </representedOrganization>
+        </assignedEntity>
+      </performer>
+    </serviceEvent>
+  </documentationOf>
+  <!-- 保健指導結果情報 -->
+  <component>
+    <structuredBody>
+      <component>
+        <section>
+          <!-- ＣＤＡセクションのコード -->
+          <code code="90010" codeSystem="1.2.392.200119.6.1010" />
+          <text/>
+          <!-- 保健指導項目情報 -->
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <code nullFlavor="NA" />
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1020000001" codeSystem="1.2.392.200119.6.1006" displayName="支援レベル"/>
+                  <value xsi:type="CD" code="2" codeSystem="1.2.392.200119.6.3001" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1020000003" />
+                  <value xsi:type="ST">動機付け通常コース</value>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+      <component>
+        <section>
+          <!-- ＣＤＡセクションのコード -->
+          <code code="90030" codeSystem="1.2.392.200119.6.1010" />
+          <text />
+          <!-- 初回面接実施情報 -->
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <code code="1" codeSystem="1.2.392.200119.6.3003" />
+              <effectiveTime value="20130701" />
+              <performer>
+                <assignedEntity>
+                  <id nullFlavor="NI" />
+                  <code code="1" codeSystem="1.2.392.200119.6.3020" />
+                </assignedEntity>
+              </performer>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1022000013" />
+                  <effectiveTime>
+                    <width value="120" unit="min" />
+                  </effectiveTime>
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+          <!-- 保健指導計画情報 -->
+          <entry>
+            <act classCode="ACT" moodCode="INT">
+              <code nullFlavor="NA" />
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001031" />
+                  <value xsi:type="PQ" value="79.0" unit="cm" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001032" />
+                  <value xsi:type="PQ" value="65.0" unit="kg" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001033" />
+                  <value xsi:type="PQ" value="125" unit="mm[Hg]" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001034" />
+                  <value xsi:type="PQ" value="75" unit="mm[Hg]" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001050" />
+                  <value xsi:type="PQ" value="1200" unit="kcal" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001051" />
+                  <value xsi:type="PQ" value="800" unit="kcal" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="GOL">
+                  <code code="1021001052" />
+                  <value xsi:type="PQ" value="400" unit="kcal" />
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+      <component>
+        <section>
+          <!-- ＣＤＡセクションのコード -->
+          <code code="90060" codeSystem="1.2.392.200119.6.1010" />
+          <text />
+          <entry>
+            <act classCode="ACT" moodCode="EVN">
+              <code code="1" codeSystem="1.2.392.200119.6.3005" />
+              <effectiveTime value="20140110" />
+              <performer>
+                <assignedEntity>
+                  <id nullFlavor="NI" />
+                  <code code="1" codeSystem="1.2.392.200119.6.3020" />
+                </assignedEntity>
+              </performer>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1042001031" />
+                  <value xsi:type="PQ" value="85.0" unit="cm" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1042001032" />
+                  <value xsi:type="PQ" value="78.0" unit="kg" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1042001042" />
+                  <value xsi:type="CD" code="0" codeSystem="1.2.392.200119.6.3010" />
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="COMP">
+                <observation classCode="OBS" moodCode="EVN">
+                  <code code="1042001041" />
+                  <value xsi:type="CD" code="2" codeSystem="1.2.392.200119.6.3010" />
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>

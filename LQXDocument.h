@@ -146,9 +146,8 @@ typedef enum {
 @property (nonatomic,readonly) NSString *name;
 /*! 値 */
 @property (nonatomic,copy) NSString *value;
-///*! 次の要素 */
+
 //@property (nonatomic,readonly) NSString *nextAttribute;
-///*! 前の要素 */
 //@property (nonatomic,readonly) NSString *previousAttribute;;
 
 /*!
@@ -213,9 +212,7 @@ typedef enum {
  */
 @interface LQXNode : LQXObject
 
-///*! 次の要素 */
 //@property (nonatomic) LQXNode *nextNode;
-///*! 前の要素 */
 //@property (nonatomic) LQXNode *previousNode;
 
 //-(void)addAfterSelf:(id)firstObj, ... NS_REQUIRES_NIL_TERMINATION;
@@ -236,6 +233,48 @@ typedef enum {
 
 @end
 
+/*!
+ @abstract      コメントXML要素
+ @discussion    コメントXML要素
+ */
+@interface LQXComment : LQXNode
+
+/*! 値 */
+@property (nonatomic,copy) NSString *value;
+
+/*!
+ @abstract      LQXCommentを取得する
+ @discussion    NSStringからLQXCommentを生成する
+ @param         value 値
+ @result        LQXComment
+ */
++(LQXComment*)comment:(NSString*)value;
+/*!
+ @abstract      LQXCommentを取得する
+ @discussion    元となるLQXCommentからLQXCommentを生成する
+ @param         attribute 元になるLQXComment
+ @result        LQXComment
+ */
++(LQXComment*)commentWithComment:(LQXComment*)comment;
+
+/*!
+ @abstract      LQXCommentを取得する
+ @discussion    NSStringからLQXCommentを生成する
+ @param         value 値
+ @result        LQXComment
+ */
+-(LQXComment*)init:(NSString*)value;
+
+/*!
+ @abstract      LQXCommentを取得する
+ @discussion    元となるLQXCommentからLQXCommentを生成する
+ @param         attribute 元になるLQXComment
+ @result        LQXComment
+ */
+-(LQXComment*)initWithComment:(LQXComment*)comment;
+
+@end
+
 @class LQXElement;
 
 /*!
@@ -244,9 +283,7 @@ typedef enum {
  */
 @interface LQXContainer : LQXNode
 
-///*! 最初のノード */
 //@property (nonatomic) LQXNode *firstNode;
-///*! 最後のノード */
 //@property (nonatomic) LQXNode *lastNode;
 
 /*!
@@ -559,6 +596,13 @@ typedef enum {
  @result        LQXDocument
  */
 +(LQXDocument*)documentWithDeclaration:(LQXDeclaration*)declaration objects:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
+
+/*!
+ @abstract      xmlドキュメントを読み込む
+ @discussion    xmlドキュメントからDOMを構築する
+ @param         filename ファイル名
+ */
++(LQXDocument*)load:(NSString*)filename;
 
 -(LQXDocument*)init;
 /*!

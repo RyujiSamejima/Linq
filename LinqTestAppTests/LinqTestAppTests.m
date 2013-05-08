@@ -391,7 +391,9 @@
                               [LQXElement element:@"Child5" value:@"5"],nil];
     NSLog(@"%@",element);
     
-    element = [LQXElement load:@"MDJSettings"];
+    document = [LQXDocument load:@"hoken_dsaisyu_tokutei"];
+    NSLog(@"%@",document);
+    element = [LQXElement load:@"hoken_dsaisyu_tokutei"];
     NSLog(@"%@",element);
 }
 @end
